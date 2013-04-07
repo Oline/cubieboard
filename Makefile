@@ -9,7 +9,7 @@ all:
 	@echo "with_grsecurity:	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-"
 	@echo "with_lesser_grsecurity:	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- DISABLE_PAX_PLUGINS=y"
 	@echo "  -- u-boot compilation --"
-	@echo "u-boot:	make cubieboard_config"
+	@echo "u-boot:			make cubieboard_config"
 
 # Kernel compile
 
@@ -26,6 +26,7 @@ with_lesser_grsecurity:
 
 u-boot:
 	cd $(UBOOT_DIR) && make cubieboard_config
+	cd $(UBOOT_DIR) && make CROSS_COMPILE=arm-linux-gnueabi-
 
 # repositories update
 
