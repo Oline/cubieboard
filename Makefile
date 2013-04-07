@@ -1,3 +1,5 @@
+LINUX_DIR=linux-stable
+UBOOT_DIR=u-boot-sunxi
 JOBS=16
 
 all:
@@ -6,17 +8,24 @@ all:
 	@echo "compile:		make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-"
 	@echo "with_grsecurity:	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-"
 	@echo "with_lesser_grsecurity:	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- DISABLE_PAX_PLUGINS=y"
+	@echo "  -- u-boot compilation --"
+	@echo "u-boot:	make cubieboard_config"
 
-# Kernel compil
+# Kernel compile
 
 compile:
-	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- -j $(JOBS)
+	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- -j $(JOBS)
 
 with_grsecurity:
-	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- -j $(JOBS)
+	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- -j $(JOBS)
 
 with_lesser_grsecurity:
-	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- DISABLE_PAX_PLUGINS=y -j $(JOBS)
+	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- DISABLE_PAX_PLUGINS=y -j $(JOBS)
+
+# bootloader u-boot compile
+
+u-boot:
+	cd $(UBOOT_DIR) && make cubieboard_config
 
 # repositories update
 
