@@ -10,6 +10,9 @@ all:
 	@echo "with_lesser_grsecurity:	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- DISABLE_PAX_PLUGINS=y"
 	@echo "  -- u-boot compilation --"
 	@echo "u-boot:			make cubieboard_config"
+	@echo "  -- git submodule management --"
+	@echo "initsm:			git submodule init"
+	@echo "updatesm:			git submodule update"
 
 # Kernel compile
 
@@ -28,7 +31,16 @@ u-boot:
 	cd $(UBOOT_DIR) && make cubieboard_config
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=arm-linux-gnueabi-
 
+u-boot-clean:
+	cd $(UBOOT_DIR) && make CROSS_COMPILE=arm-linux-gnueabi- clean
+
+u-boot-distclean:
+	cd $(UBOOT_DIR) && make CROSS_COMPILE=arm-linux-gnueabi- distclean
+
 # repositories update
 
-update:
+initsm:
+	git submodule init
+
+updatesm:
 	git submodule update
