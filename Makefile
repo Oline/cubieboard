@@ -3,16 +3,20 @@ UBOOT_DIR=u-boot-sunxi
 JOBS=16
 
 all:
-	@echo "What you should do:"
+	@echo "What you can do:"
+	@echo ""
 	@echo "  -- kernel compilation --"
 	@echo "compile:		make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-"
 	@echo "with_grsecurity:	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-"
 	@echo "with_lesser_grsecurity:	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- DISABLE_PAX_PLUGINS=y"
+	@echo ""
 	@echo "  -- u-boot compilation --"
 	@echo "u-boot:			make cubieboard_config"
+	@echo ""
 	@echo "  -- git submodule management --"
 	@echo "initsm:			git submodule init"
 	@echo "updatesm:			git submodule update"
+	@echo ""
 
 # Kernel compile
 
@@ -44,3 +48,11 @@ initsm:
 
 updatesm:
 	git submodule update
+
+# Debootstrap
+
+debootstrap:
+	./make_debootstrap.sh
+
+prepare_sdcard:
+	./prepare_sdcard.sh
