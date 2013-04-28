@@ -13,6 +13,10 @@ all:
 	@echo "  -- u-boot compilation --"
 	@echo "u-boot:			make cubieboard_config"
 	@echo ""
+	@echo "  -- root_fs & sdcard partitionning --"
+	@echo "debootstrap:		create the root_fs (need testing)"
+	@echo "prepare_sdcard:		install the root_fs to the sdcard (not yet tested)"
+	@echo ""
 	@echo "  -- git submodule management --"
 	@echo "initsm:			git submodule init"
 	@echo "updatesm:			git submodule update"
@@ -41,14 +45,6 @@ u-boot-clean:
 u-boot-distclean:
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=arm-linux-gnueabi- distclean
 
-# repositories update
-
-initsm:
-	git submodule init
-
-updatesm:
-	git submodule update
-
 # Debootstrap
 
 debootstrap:
@@ -56,3 +52,11 @@ debootstrap:
 
 prepare_sdcard:
 	./prepare_sdcard.sh
+
+# repositories update
+
+initsm:
+	git submodule init
+
+updatesm:
+	git submodule update
