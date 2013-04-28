@@ -1,6 +1,5 @@
-LINUX_DIR=linux-stable
-UBOOT_DIR=u-boot-sunxi
-JOBS=16
+
+-include makefiles.vars
 
 all:
 	@echo "What you can do:"
@@ -19,7 +18,11 @@ all:
 	@echo ""
 	@echo "  -- git submodule management --"
 	@echo "initsm:			git submodule init"
-	@echo "updatesm:			git submodule update"
+	@echo "updatesm:		git submodule update"
+	@echo ""
+	@echo "  -- cleaning targets --"
+	@echo "clean:			clean the compiled files (not done yet)"
+	@echo "distclean:		clean the compilet files and the root_fs"
 	@echo ""
 
 # Kernel compile
@@ -60,3 +63,11 @@ initsm:
 
 updatesm:
 	git submodule update
+
+# Cleaning stuff
+
+clean:
+
+
+distclean:
+	sudo rm -rf chroot-armhf/
