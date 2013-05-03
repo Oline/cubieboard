@@ -32,12 +32,13 @@ sudo cp /usr/bin/qemu-arm-static usr/bin
 sudo LC_ALL=C LANGUAGE=C LANG=C chroot . dpkg --configure -a
 
 # set root password
+echo -n "Please enter the root password: "
 sudo chroot . passwd
 
 # set hostname
 echo -n "Please enter the hostname of the host: "
 read HOSTNAME
-sudo bash -c "echo $HOSTNAME > etc/hostname "
+echo $HOSTNAME > etc/hostname | sudo bash
 
 # tmp stuff
 sudo cp /etc/resolv.conf etc
@@ -52,11 +53,11 @@ sudo chroot . apt-get upgrade
 sudo chroot . apt-get install "$PACKAGES"
 
 # removing tmp stuff
-rm etc/resolv.conf
+sudo rm etc/resolv.conf
 
 # add serial console to connect to the system
-echo "T0:2345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> etc/inittab
+sudo bash -c 'echo "T0:2345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> etc/inittab'
 
 # copy linux image to the root_fs
-cp $LINUX_DIR/arch/arm/boot/uImage boot
+sudo cp $LINUX_DIR/arch/arm/boot/uImage boot
 make -C $LINUX_DIR INSTALL_MOD_PATH=`pwd` ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules_install
