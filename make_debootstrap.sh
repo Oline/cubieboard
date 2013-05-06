@@ -21,6 +21,8 @@ do_debootstrap()
 set -x
 
 sudo /usr/sbin/debootstrap --foreign --arch armhf wheezy .
+# --variant=minbase
+
 
 # that command is usefull to run target host binaries (ARM) on the build host  (x86)
 sudo cp /usr/bin/qemu-arm-static usr/bin
@@ -53,6 +55,11 @@ set -x
 
 # add serial console to connect to the system
 sudo bash -c 'echo "T0:2345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> etc/inittab'
+# disable some local consoles
+# sed -i 's/^\([3-6]:.* tty[3-6]\)/#\1/' /etc/inittab
+
+# cpy a template basic fstab
+sudo cp ../fstab.base etc/fstab
 
 set +x
 }
