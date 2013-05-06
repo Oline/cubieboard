@@ -3,3 +3,10 @@
 - customising MAC addr in the .fex file
 
 - customising the network in the system (/etc/network/)
+
+- Adding:
+
+[dynamic]
+MAC = "0123456789AB"
+
+as a section to to .fex file before creating the script.bin
