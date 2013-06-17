@@ -26,7 +26,7 @@ format_sdcard()
 copy_to_sdcard()
 {
 # copy boot binaries to the sdcard
-    if [ -n "$SDCARD_DEVICE" ]
+    if [ -n "$SDCARD_DEVICE" ] # Should match a device regexp or something like that.
     then
 	cd u-boot-sunxi
 	sudo dd if=spl/sunxi-spl.bin of=$SDCARD_DEVICE bs=1024 seek=8
