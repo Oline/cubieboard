@@ -10,3 +10,10 @@
 MAC = "0123456789AB"
 
 as a section to to .fex file before creating the script.bin
+
+- Clean target for u-boot and kernel compile
+
+- While kernel compile, can't find binary "mkimage" on the system. This binary
+  can be found in u-boot-sunxi/tools/mkimage
+  Should add this path to the PATH variable during the make compile???
+
