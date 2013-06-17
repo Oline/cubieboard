@@ -17,3 +17,9 @@ as a section to to .fex file before creating the script.bin
   can be found in u-boot-sunxi/tools/mkimage
   Should add this path to the PATH variable during the make compile???
 
+
+- For OpenSuse chroot arm exec :
+http://en.opensuse.org/HCL:Chroot
+# zypper in qemu-linux-user
+# qemu-binfmt-conf.sh
+
