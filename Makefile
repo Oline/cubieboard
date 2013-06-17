@@ -1,8 +1,11 @@
+export
 
 include makefile.vars
 
-all:
+help:
 	@echo "What you can do:"
+	@echo ""
+	@echo "all:			Will do all the job for you."
 	@echo ""
 	@echo "  -- git submodule management --"
 	@echo "initsm:			git submodule init"
@@ -35,6 +38,10 @@ all:
 	@echo "	JOBS		=	$(JOBS)"
 	@echo "	SDCARD_DEVICE	=	$(SDCARD_DEVICE)"
 
+
+all:  u-boot compile debootstrap prepare_sdcard
+	@echo "Done. You can now use your cubiboard :)"
+
 # repositories update
 
 initsm:
@@ -43,7 +50,7 @@ initsm:
 updatesm:
 	git submodule update
 
-# Kernel compile
+# grsecurity patch management
 
 patch_grsecurity:
 	cd $(LINUX_DIR) && git checkout -b 3.2.42
@@ -52,7 +59,10 @@ patch_grsecurity:
 prepare_grsecurity:
 	cp conf/config_cubieboard_3.2.42_grsec linux-stable/.config
 
+# Kernel compile
+
 compile:
+	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sun4i_defconfig
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) uImage modules
 
 with_grsecurity:
@@ -60,6 +70,13 @@ with_grsecurity:
 
 with_lesser_grsecurity:
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) DISABLE_PAX_PLUGINS=y -j $(JOBS) uImage modules
+
+kernel_clean:
+	cd $(LINUX_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) clean
+
+kernel_distclean:
+	cd $(LINUX_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) mrproper
+
 
 # bootloader u-boot compile
 
@@ -83,8 +100,8 @@ prepare_sdcard:
 
 # Cleaning stuff
 
-clean:
+clean: u-boot-clean kernel_clean
 
 
-distclean: clean
+distclean: u-boot-distclean kernel_distclean
 	sudo rm -rf chroot-armhf/
