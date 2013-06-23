@@ -9,7 +9,7 @@ set -e
 
 HOSTNAME=A10
 PACKAGES="emacs23-nox"
-LINUX_DIR=../linux-stable/
+LINUX_DIR=../linux-sunxi/
 CHROOT_DIR=chroot-armhf
 
 ############
