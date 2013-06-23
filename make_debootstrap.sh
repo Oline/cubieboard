@@ -7,10 +7,8 @@ set -e
 # VARIABLES #
 #############
 
-HOSTNAME=A10
-PACKAGES="emacs23-nox"
-LINUX_DIR=../linux-sunxi/
-CHROOT_DIR=chroot-armhf
+# Including users defined variables
+. ./makefile.vars
 
 ############
 # FUNCTION #
@@ -48,7 +46,11 @@ sudo chroot . passwd
 
 # set hostname
 echo -n "Please enter the hostname of the host: "
-read HOSTNAME
+
+if [ -z "$HOSTNAME" ]
+then
+    read HOSTNAME
+fi
 sudo bash -c "echo $HOSTNAME > etc/hostname"
 
 set -x
@@ -97,8 +99,8 @@ install_kernel()
 {
     set -x
 # copy linux image to the root_fs
-    sudo cp $LINUX_DIR/arch/arm/boot/uImage boot
-    sudo make -C $LINUX_DIR INSTALL_MOD_PATH=`pwd` ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules_install
+    sudo cp ../$LINUX_DIR/arch/arm/boot/uImage boot
+    sudo make -C ../$LINUX_DIR INSTALL_MOD_PATH=`pwd` ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules_install
 
 # add some kernel boot args
     mkimage -C none -A arm -T script -d ../boot.cmd ../boot.scr

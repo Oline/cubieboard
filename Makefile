@@ -34,8 +34,11 @@ help:
 	@echo "  -- Environnement variables --"
 	@echo "	LINUX_DIR	=	$(LINUX_DIR)"
 	@echo "	UBOOT_DIR	=	$(UBOOT_DIR)"
+	@echo "	CHROOT_DIR	=	$(CHROOT_DIR)"
 	@echo "	GCC_PREFIX	=	$(GCC_PREFIX)"
 	@echo "	JOBS		=	$(JOBS)"
+	@echo "	HOSTNAME	=	$(HOSTNAME)"
+	@echo "	PACKAGES	=	$(PACKAGES)"
 	@echo "	SDCARD_DEVICE	=	$(SDCARD_DEVICE)"
 
 
@@ -96,7 +99,7 @@ debootstrap:
 	./make_debootstrap.sh all
 
 prepare_sdcard:
-	SDCARD_DEVICE=$(SDCARD_DEVICE) ./prepare_sdcard.sh copy2sdcard
+	./prepare_sdcard.sh all
 
 # Cleaning stuff
 

@@ -7,9 +7,12 @@ set -e
 # VARIABLES #
 #############
 
-#SDCARD_DEVICE=
+# Including users defined variables
+. ./makefile.vars
 
-########
+############
+# FUNCTION #
+############
 
 format_sdcard()
 {
