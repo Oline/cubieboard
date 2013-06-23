@@ -83,7 +83,8 @@ update_system_and_custom_packages()
     sudo chroot . apt-get upgrade
 
 # install additionnals packages
-    sudo chroot . apt-get install "$PACKAGES"
+### Here $PACKAGES MUST be without double quotes or apt-get won't understand the list of packages
+    sudo chroot . apt-get install --yes $PACKAGES
 
 # removing tmp stuff
     sudo chroot . apt-get clean
