@@ -23,7 +23,7 @@ format_sdcard()
 
 ########
 
-copy_to_sdcard()
+copy2sdcard()
 {
 # copy boot binaries to the sdcard
     if [ -n "$SDCARD_DEVICE" ] # Should match a device regexp or something like that.
@@ -50,13 +50,13 @@ copy_to_sdcard()
 case "$1" in
     all)
 	format_sdcard
-	copy_to_sdcard
+	copy2sdcard
 	;;
     format)
 	format_sdcard
 	;;
     copy2sdcard)
-	copy_to_sdcard
+	copy2sdcard
 	;;
     *)
 	echo "Usage: prepare_sdcard.sh {all|format|copy2sdcard}"
