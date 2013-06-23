@@ -58,8 +58,9 @@ sudo bash -c 'echo "T0:2345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> etc/in
 # disable some local consoles
 # sed -i 's/^\([3-6]:.* tty[3-6]\)/#\1/' /etc/inittab
 
-# cpy a template basic fstab
+# copy basic templates of configuration files
 sudo cp ../fstab.base etc/fstab
+sudo cp ../interfaces.base etc/network/interfaces
 
 set +x
 }
