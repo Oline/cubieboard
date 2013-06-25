@@ -42,7 +42,7 @@ help:
 	@echo "	SDCARD_DEVICE	=	$(SDCARD_DEVICE)"
 
 
-all:  u-boot compile debootstrap prepare_sdcard
+all:  u-boot kernel_compile debootstrap prepare_sdcard
 	@echo "Done. You can now use your cubiboard :)"
 
 # repositories update
@@ -64,8 +64,10 @@ prepare_grsecurity:
 
 # Kernel compile
 
-compile:
+kernel_defconfig:
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sun4i_defconfig
+
+kernel_compile:
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) uImage modules
 
 with_grsecurity:
@@ -87,10 +89,10 @@ u-boot:
 	cd $(UBOOT_DIR) && make cubieboard_config
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX)
 
-u-boot-clean:
+u-boot_clean:
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) clean
 
-u-boot-distclean:
+u-boot_distclean:
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) distclean
 
 # Debootstrap
@@ -99,12 +101,12 @@ debootstrap:
 	./make_debootstrap.sh all
 
 prepare_sdcard:
-	./prepare_sdcard.sh all
+	./prepare_sdcard.sh copy2sdcard
 
 # Cleaning stuff
 
-clean: u-boot-clean kernel_clean
+clean: u-boot_clean kernel_clean
 
 
-distclean: u-boot-distclean kernel_distclean
+distclean: u-boot_distclean kernel_distclean
 	sudo rm -rf chroot-armhf/
