@@ -1,6 +1,8 @@
 - customising MAC addr in the .fex file
+ [DONE]
 
 - customising the network in the system (/etc/network/)
+ [DONE]
 
 - Adding:
 
@@ -8,6 +10,7 @@
 MAC = "0123456789AB"
 
 as a section to to .fex file before creating the script.bin
+ [DONE]
 
 - While kernel compile, can't find binary "mkimage" on the system. This binary
   can be found in u-boot-sunxi/tools/mkimage
@@ -18,5 +21,5 @@ http://en.opensuse.org/HCL:Chroot
 # zypper in qemu-linux-user
 # qemu-binfmt-conf.sh
 
-- A way MUST be found to use only 1 files for variables between sh scripts and makefiles. I must be easy, it only needs to be done.
-
+- A way MUST be found to use only 1 files for variables between sh scripts and makefiles. It must be easy, it only needs to be done.
+ [DONE]
