@@ -115,9 +115,21 @@ install_kernel()
 board_script()
 {
     set -x
-    ../sunxi-tools/fex2bin ../sunxi-boards/sys_config/a10/cubieboard.fex ../script.bin
+
+    # grab template fex file for cubieboard
+    cp ../sunxi-boards/sys_config/a10/cubieboard.fex ../script.fex
+
+    # Set Ethernet MAC addr
+    echo "" >> ../script.fex
+    echo "[dynamic]" >> ../script.fex
+    echo "MAC = \"$MACADDR\"" >> ../script.fex
+
+    # created the binary version of the fex file
+    ../sunxi-tools/fex2bin  ../script.fex ../script.bin
     sudo chown root:root ../script.bin
     sudo mv ../script.bin boot/
+    rm ../script.fex
+
     set +x
 }
 
