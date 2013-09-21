@@ -117,7 +117,19 @@ board_script()
     set -x
 
     # grab template fex file for cubieboard
-    cp ../sunxi-boards/sys_config/a10/cubieboard.fex ../script.fex
+
+case "$CUBIEBOARD_VERSION" in
+    cubieboard)
+	cp ../sunxi-boards/sys_config/a10/cubieboard.fex ../script.fex
+	;;
+    cubieboard2)
+	cp ../sunxi-boards/sys_config/a20/cubieboard2.fex ../script.fex
+	;;
+    *)
+	echo "Unknown Cubieboard version. Leaving..."
+	exit 1
+	;;
+esac
 
     # Set Ethernet MAC addr
     echo "" >> ../script.fex
