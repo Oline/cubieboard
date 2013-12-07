@@ -136,6 +136,9 @@ esac
     echo "[dynamic]" >> ../script.fex
     echo "MAC = \"$MACADDR\"" >> ../script.fex
 
+    # Change the LEDs behavior
+    #grep leds_trigger ../script.fex
+
     # created the binary version of the fex file
     ../sunxi-tools/fex2bin  ../script.fex ../script.bin
     sudo chown root:root ../script.bin
