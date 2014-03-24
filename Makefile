@@ -22,7 +22,7 @@ help:
 	@echo "with_lesser_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) DISABLE_PAX_PLUGINS=y uImage modules"
 	@echo ""
 	@echo "  -- u-boot compilation --"
-	@echo "u-boot:			make $(CUBIEBOARD_VERSION)_config"
+	@echo "u-boot:			make CROSS_COMPILE=$(GCC_PREFIX) $(CUBIEBOARD_VERSION)_config"
 	@echo ""
 	@echo "  -- root_fs & sdcard partitionning --"
 	@echo "debootstrap:		create the root_fs (need testing)"
@@ -98,8 +98,8 @@ kernel_distclean:
 # bootloader u-boot compile
 
 u-boot:
-	cd $(UBOOT_DIR) && make $(CUBIEBOARD_VERSION)_config
-	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX)
+	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) $(CUBIEBOARD_VERSION)_config
+	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS)
 
 u-boot_clean:
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) clean
