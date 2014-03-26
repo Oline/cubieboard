@@ -8,7 +8,7 @@ set -e
 #############
 
 # internal values
-BUILD_SERIAL=`date "+%Y%m%d%k%M"`
+BUILD_SERIAL=`date "+%Y%m%d%H%M"`
 TMP_VAL=$$
 LOOP_DEV=/dev/mapper/loop0"$TMP_VAL"
 
