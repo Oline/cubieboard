@@ -23,3 +23,5 @@ http://en.opensuse.org/HCL:Chroot
 
 - A way MUST be found to use only 1 files for variables between sh scripts and makefiles. It must be easy, it only needs to be done.
  [DONE]
+
+- Generated images needs a way to generate a random (?) MAC addr and hostname
