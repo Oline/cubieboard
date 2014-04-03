@@ -98,7 +98,7 @@ copyrootfs2image()
 	if [ -b "$LOOP_DEV"1 ]
 	then
 	    sudo mount "$LOOP_DEV"1 /mnt
-	    cd chroot-armhf
+	    cd "$CHROOT_DIR"
 	    sudo bash -c "tar --exclude=qemu-arm-static -cf - . | tar -C /mnt -xvf -"
 	    cd ..
 	    sudo umount /mnt
