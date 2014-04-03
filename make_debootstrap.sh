@@ -101,7 +101,7 @@ install_kernel()
     set -x
 # copy linux image to the root_fs
     sudo cp ../$LINUX_DIR/arch/arm/boot/uImage boot
-    sudo make -C ../$LINUX_DIR INSTALL_MOD_PATH=`pwd` ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules_install
+    sudo make -C ../$LINUX_DIR INSTALL_MOD_PATH=`pwd` ARCH=arm CROSS_COMPILE="$GCC_PREFIX" modules_install
 
 # add some kernel boot args
     mkimage -C none -A arm -T script -d ../boot.cmd ../boot.scr
