@@ -72,11 +72,15 @@ prepare_grsecurity:
 # Kernel compile
 
 kernel_defconfig:
+ifeq ($(findstring .config,$(wildcard $(LINUX_DIR)/.config)), ) # check if .config can be erased, else do not erase it
 ifeq ($(CUBIEBOARD_VERSION), cubieboard)
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sun4i_defconfig
 endif
 ifeq ($(CUBIEBOARD_VERSION), cubieboard2)
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sun7i_defconfig
+endif
+else
+	@echo "File .config already exists."
 endif
 
 kernel_compile:
