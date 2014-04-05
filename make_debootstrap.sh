@@ -80,7 +80,7 @@ update_system_and_custom_packages()
     sudo bash -c "echo deb http://http.debian.net/debian/ wheezy main contrib non-free > etc/apt/sources.list"
     sudo bash -c "echo deb http://security.debian.org/ wheezy/updates main contrib non-free >> etc/apt/sources.list"
     sudo chroot . apt-get update
-    sudo chroot . apt-get upgrade
+    sudo chroot . apt-get upgrade --yes
 
 # install additionnals packages
 ### Here $PACKAGES MUST be without double quotes or apt-get won't understand the list of packages
