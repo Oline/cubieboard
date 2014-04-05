@@ -11,6 +11,7 @@ set -e
 BUILD_SERIAL=`date "+%Y%m%d%H%M"`
 TMP_VAL=$$
 LOOP_DEV=/dev/mapper/loop0"$TMP_VAL"
+DD_TIMEOUT=5
 
 # Including users defined variables
 . ./makefile.vars
@@ -31,13 +32,20 @@ build_image()
 set -e
 
 if [ ! -e "$IMG_NAME" ]; then
-    dd if=/dev/zero of="$IMG_NAME" bs=1M count="$IMG_SIZE"
+    # Start dd in background to be able to print its progress waiting it to finish
+    dd if=/dev/zero of="$IMG_NAME" bs=1M count="$IMG_SIZE" &
+    # While dd is still running, show it's progress
+    while ps -p $! > /dev/null ; do
+	sleep "$DD_TIMEOUT"
+	kill -USR1 "$!"
+    done
 fi
 /sbin/parted -s "$IMG_NAME" mklabel msdos
 /sbin/parted -s -a opt "$IMG_NAME" mkpart primary 1 $(($PARTITION_SIZE + 1))
 /sbin/parted -s -a opt "$IMG_NAME" mkpart primary $(($PARTITION_SIZE + 2)) $((($PARTITION_SIZE * 2) + 1))
 /sbin/parted -s -a opt "$IMG_NAME" mkpart primary $((($PARTITION_SIZE * 2) + 2)) $IMG_SIZE
 
+# why do we remove error checking?
 set +e
 sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"
 
