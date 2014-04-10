@@ -48,18 +48,10 @@ fi
 # boot software, the second for rootfs and the  last for FIXME. Please
 # note that alignment is done on multiple of IMG_SIZE
 
-echo "step 2/3 : partitionning local file system in progress..."
 /sbin/parted --script "$IMG_NAME" mklabel msdos
 /sbin/parted --script --align optimal "$IMG_NAME" mkpart primary 1 $(($PARTITION_SIZE + 1))
 /sbin/parted --script --align optimal "$IMG_NAME" mkpart primary $(($PARTITION_SIZE + 2)) $((($PARTITION_SIZE * 2) + 1))
 /sbin/parted --script --align optimal "$IMG_NAME" mkpart primary $((($PARTITION_SIZE * 2) + 2)) $IMG_SIZE
-
-# edit  to stdout  result of partitionning  in order  to help user  to
-# debug
-
-echo "current partitionning for the FS is ...."
-/usr/bin/partx --show "$IMG_NAME"
-
 
 # for each  internal partition in the  file, create  one device in the
 # kernel on the loopback (/dev/loopxxxx), so that it is later possible
@@ -83,7 +75,7 @@ if [ $? -ne 0 ];then
 fi
 set -e
 # now manage  output of command, we try  to extract the correct device
-# number for the looop device as in following exemple
+# number for the loop device as in following exemple (/dev/loop0)
 # sudo /sbin/kpartx -a -v  -p 22157 cubieboard2-201404090807-248.img 
 # add map loop0221571 (253:73): 0 192512 linear /dev/loop0 2048
 # add map loop0221572 (253:74): 0 192512 linear /dev/loop0 196608
@@ -108,6 +100,9 @@ fi
 sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
 
 sudo /sbin/parted "$IMG_NAME" print
+echo "step 3/3 : file system is ready to write to your sdcard...please look at dmesg "
+echo "step 3/3 : in order to search for your local device (eg: /dev/sdzzzz, then enter ...."
+echo "step 3/3 : sudo dd if=$IMG_NAME of=/dev/sdzzzz bs=1M  && sync"
 }
 
 ########
