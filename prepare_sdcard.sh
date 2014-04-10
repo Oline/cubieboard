@@ -10,7 +10,6 @@ set -e
 # internal values
 BUILD_SERIAL=`date "+%Y%m%d%H%M"`
 TMP_VAL=$$
-LOOP_DEV=/dev/mapper/loop0"$TMP_VAL"
 DD_TIMEOUT=5
 
 # Including users defined variables
@@ -32,6 +31,9 @@ build_image()
 {
 set -e
 
+# first  step, create a  local file and init with  it with NUL values,
+# please note that potential error (disk full) is trapped (set -e)
+
 if [ ! -e "$IMG_NAME" ]; then
     # Start dd in background to be able to print its progress waiting it to finish
     dd if=/dev/zero of="$IMG_NAME" bs=1M count="$IMG_SIZE" &
@@ -41,14 +43,56 @@ if [ ! -e "$IMG_NAME" ]; then
 	sleep "$DD_TIMEOUT"
     done
 fi
-/sbin/parted -s "$IMG_NAME" mklabel msdos
-/sbin/parted -s -a opt "$IMG_NAME" mkpart primary 1 $(($PARTITION_SIZE + 1))
-/sbin/parted -s -a opt "$IMG_NAME" mkpart primary $(($PARTITION_SIZE + 2)) $((($PARTITION_SIZE * 2) + 1))
-/sbin/parted -s -a opt "$IMG_NAME" mkpart primary $((($PARTITION_SIZE * 2) + 2)) $IMG_SIZE
+
+# second step, create  3 partitions in  this image, the first  one for
+# boot software, the second for rootfs and the  last for FIXME. Please
+# note that alignment is done on multiple of IMG_SIZE
+
+echo "step 2/3 : partitionning local file system in progress..."
+/sbin/parted --script "$IMG_NAME" mklabel msdos
+/sbin/parted --script --align optimal "$IMG_NAME" mkpart primary 1 $(($PARTITION_SIZE + 1))
+/sbin/parted --script --align optimal "$IMG_NAME" mkpart primary $(($PARTITION_SIZE + 2)) $((($PARTITION_SIZE * 2) + 1))
+/sbin/parted --script --align optimal "$IMG_NAME" mkpart primary $((($PARTITION_SIZE * 2) + 2)) $IMG_SIZE
+
+# edit  to stdout  result of partitionning  in order  to help user  to
+# debug
+
+echo "current partitionning for the FS is ...."
+/usr/bin/partx --show "$IMG_NAME"
+
+
+# for each  internal partition in the  file, create  one device in the
+# kernel on the loopback (/dev/loopxxxx), so that it is later possible
+# to mount it as valid file system.  Please  note that this feature is
+# available only if  your  running kernel  has  'kernel device mapper'
+# feature. Furthermore, the loop device  is not static, but depends of
+# current kernel configuration.  This  is why output of command kpartx
+# must be parsed in  order to discover real  loop device number (  For
+# exemple, if your running kernel use raid and lvm devices)
 
 # why do we remove error checking?
 set +e
-sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"
+RES=`sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"`
+if [ $? -ne 0 ];then
+	# some time, error  when using kpartx,  probably bad free internal
+	# loop  ressource, look at following error....
+	# mount: could  not find any free loop deviceBad address
+	# can't set up loop
+	echo "error when launching : sudo /sbin/kpartx -a -v -p $TMP_VAL $IMG_NAME"
+	exit $EXIT_ERROR
+fi
+set -e
+# now manage  output of command, we try  to extract the correct device
+# number for the looop device as in following exemple
+# sudo /sbin/kpartx -a -v  -p 22157 cubieboard2-201404090807-248.img 
+# add map loop0221571 (253:73): 0 192512 linear /dev/loop0 2048
+# add map loop0221572 (253:74): 0 192512 linear /dev/loop0 196608
+# add map loop0221573 (253:75): 0 96256 linear /dev/loop0 389120
+
+MY_LOOP_DEV=`echo $RES |awk '{print $8}'`
+
+# add current process id to loopdev
+LOOP_DEV=$MY_LOOP_DEV$TMP_VAL
 
 if [ -b "$LOOP_DEV"1 ]; then
     /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"1
@@ -60,8 +104,8 @@ if [ -b "$LOOP_DEV"3 ]; then
     /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"3
 fi
 
+# free internal loop device ...
 sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
-set -e
 
 sudo /sbin/parted "$IMG_NAME" print
 }
