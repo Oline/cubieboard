@@ -76,14 +76,16 @@ copyboot2image()
 	then
 	    # cd u-boot-sunxi
 	    if [ -f u-boot-sunxi/spl/sunxi-spl.bin ]; then
-		sudo dd if=u-boot-sunxi/spl/sunxi-spl.bin of="$IMG_NAME" bs=1024 seek=8 conv=nocreat,notrunc
+			sudo dd if=u-boot-sunxi/spl/sunxi-spl.bin of="$IMG_NAME" bs=1024 seek=8 conv=nocreat,notrunc
 	    else
-		echo "You need to build u-boot first"
+			echo "You need to build u-boot first"
+			exit $EXIT_ERROR
 	    fi
 	    if [ -f u-boot-sunxi/u-boot.bin ]; then
-		sudo dd if=u-boot-sunxi/u-boot.bin of="$IMG_NAME" bs=1024 seek=32 conv=nocreat,notrunc
+			sudo dd if=u-boot-sunxi/u-boot.bin of="$IMG_NAME" bs=1024 seek=32 conv=nocreat,notrunc
 	    else
-		echo "You need to build u-boot first"
+			echo "You need to build u-boot first"
+			exit $EXIT_ERROR
 	    fi
 	    # cd ..
 	else
