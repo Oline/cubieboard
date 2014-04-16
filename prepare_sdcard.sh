@@ -37,8 +37,8 @@ if [ ! -e "$IMG_NAME" ]; then
     dd if=/dev/zero of="$IMG_NAME" bs=1M count="$IMG_SIZE" &
     # While dd is still running, show it's progress
     while ps -p $! > /dev/null ; do
-	sleep "$DD_TIMEOUT"
 	kill -USR1 "$!"
+	sleep "$DD_TIMEOUT"
     done
 fi
 /sbin/parted -s "$IMG_NAME" mklabel msdos
