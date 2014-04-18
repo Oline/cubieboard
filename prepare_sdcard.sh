@@ -63,7 +63,7 @@ fi
 sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
 set -e
 
-/sbin/parted "$IMG_NAME" print
+sudo /sbin/parted "$IMG_NAME" print
 }
 
 ########
