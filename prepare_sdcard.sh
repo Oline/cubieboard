@@ -62,10 +62,10 @@ fi
 # must be parsed in  order to discover real  loop device number (  For
 # exemple, if your running kernel use raid and lvm devices)
 
-# why do we remove error checking?
+# !!! why do we remove error checking? !!!
 set +e
 RES=`sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"`
-if [ $? -ne 0 ];then
+if [ $? -ne 0 ]; then
 	# some time, error  when using kpartx,  probably bad free internal
 	# loop  ressource, look at following error....
 	# mount: could  not find any free loop deviceBad address
@@ -99,10 +99,8 @@ fi
 # free internal loop device ...
 sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
 
+# print image output for human checking purpose
 sudo /sbin/parted "$IMG_NAME" print
-echo "step 3/3 : file system is ready to write to your sdcard...please look at dmesg "
-echo "step 3/3 : in order to search for your local device (eg: /dev/sdzzzz, then enter ...."
-echo "step 3/3 : sudo dd if=$IMG_NAME of=/dev/sdzzzz bs=1M  && sync"
 }
 
 ########
