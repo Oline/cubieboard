@@ -82,18 +82,19 @@ set -e
 # add map loop0221573 (253:75): 0 96256 linear /dev/loop0 389120
 
 MY_LOOP_DEV=`echo $RES |awk '{print $8}'`
+MY_LOOP_DEV=`basename $MY_LOOP_DEV`
 
 # add current process id to loopdev
-LOOP_DEV=$MY_LOOP_DEV$TMP_VAL
+LOOP_DEV=/dev/mapper/"$MY_LOOP_DEV""$TMP_VAL"
 
 if [ -b "$LOOP_DEV"1 ]; then
-    /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"1
+    sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"1
 fi
 if [ -b "$LOOP_DEV"2 ]; then
-    /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"2
+    sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"2
 fi
 if [ -b "$LOOP_DEV"3 ]; then
-    /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"3
+    sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"3
 fi
 
 # free internal loop device ...
