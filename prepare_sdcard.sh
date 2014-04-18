@@ -36,7 +36,7 @@ set -e
 
 if [ ! -e "$IMG_NAME" ]; then
     # Start dd in background to be able to print its progress waiting it to finish
-    dd if=/dev/zero of="$IMG_NAME" bs=1M count="$IMG_SIZE" &
+    dd if=/dev/zero of="$IMG_NAME" bs=1M count="$IMG_SIZE" iflag=fullblock &
     # While dd is still running, show it's progress
     while ps -p $! > /dev/null ; do
 	kill -USR1 "$!"
