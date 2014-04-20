@@ -22,6 +22,7 @@ PARTITION_SIZE=$((($IMG_SIZE - $CONF_SIZE) / 2))
 FS_TYPE=ext2
 IMG_NAME="$CUBIEBOARD_VERSION"-"$BUILD_SERIAL"-"$IMG_SIZE".img
 EXIT_ERROR=1
+EXIT_OK=0
 
 ############
 # FUNCTION #
@@ -31,7 +32,7 @@ build_image()
 {
 set -e
 
-# first  step, create a  local file and init with  it with NUL values,
+# first  step, create a  local file and init it with  NULL values,
 # please note that potential error (disk full) is trapped (set -e)
 
 if [ ! -e "$IMG_NAME" ]; then
@@ -112,25 +113,36 @@ copyboot2image()
     # Should match a device regexp or something like that.
     if [ -n "$IMG_NAME" ]; then
 	if [ -f "$IMG_NAME" ]; then
-	    # cd u-boot-sunxi
 	    if [ -f u-boot-sunxi/spl/sunxi-spl.bin ]; then
-			sudo dd if=u-boot-sunxi/spl/sunxi-spl.bin of="$IMG_NAME" bs=1024 seek=8 conv=nocreat,notrunc
+			# copy previously generated u-boot files on image 
+			sudo dd \
+				if=u-boot-sunxi/spl/sunxi-spl.bin \
+				of="$IMG_NAME" \
+				bs=1024 \
+				seek=8 \
+				conv=nocreat,notrunc
 	    else
 			echo "You need to build u-boot first"
 			exit $EXIT_ERROR
 	    fi
 	    if [ -f u-boot-sunxi/u-boot.bin ]; then
-			sudo dd if=u-boot-sunxi/u-boot.bin of="$IMG_NAME" bs=1024 seek=32 conv=nocreat,notrunc
+			sudo dd \
+				if=u-boot-sunxi/u-boot.bin \
+				of="$IMG_NAME" \
+				bs=1024 \
+				seek=32 \
+				conv=nocreat,notrunc
 	    else
 			echo "You need to build u-boot first"
 			exit $EXIT_ERROR
 	    fi
-	    # cd ..
 	else
 	    echo "$IMG_NAME does not seem to be a regular image file..."
+		exit $EXIT_ERROR
 	fi
     else
-	echo "The variable IMG_NAME does not seem to exist..."
+		echo "The variable IMG_NAME does not seem to exist..."
+		exit $EXIT_ERROR
     fi
 }
 
@@ -142,18 +154,33 @@ copyrootfs2image()
     # Should match a device regexp or something like that.
     set +e
     sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"
-    if [ -n "$LOOP_DEV"1 ]; then
-	if [ -b "$LOOP_DEV"1 ]; then
-	    sudo mount "$LOOP_DEV"1 /mnt
-	    cd "$CHROOT_DIR"
-	    sudo bash -c "tar --exclude=qemu-arm-static -cf - . | tar -C /mnt -xvf -"
-	    cd ..
-	    sudo umount /mnt
-	else
-	    echo $LOOP_DEV"1 does not seem to be a block device..."
-	fi
+    if [ -n "$LOOP_DEV"1 ] ;then
+		if [ -b "$LOOP_DEV"1 ] ;then
+            # CHROOT_DIR      is  created        when   launching    
+            # make_debootstrap.sh, so if not done, not possible to make
+            # cd  "$CHROOT_DIR" because not  existant,  and we must be
+            # sure to mount device, otherwise not  possible to
+            # free loop device later because 'in used by mount'
+			if [ -d "$CHROOT_DIR" ] ;then
+				cd "$CHROOT_DIR"
+				sudo mount "$LOOP_DEV"1 /mnt
+				sudo bash -c "tar --exclude=qemu-arm-static -cf - . | tar -C /mnt -xvf -"
+				cd ..
+				sudo umount /mnt
+			else
+				echo " $CHROOT_DIR not existant, please run make debootstrap first"
+				sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
+				exit $EXIT_ERROR
+			fi
+		else
+			echo $LOOP_DEV"1 does not seem to be a block device..."
+			sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
+			exit $EXIT_ERROR
+		fi
     else
-	echo "The variable LOOP_DEV does not seem to exist..."
+		echo "The variable LOOP_DEV does not seem to exist..."
+		sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
+		exit $EXIT_ERROR
     fi
     sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
     set -e
@@ -180,9 +207,9 @@ case "$1" in
 	;;
     *)
 	echo "Usage: prepare_sdcard.sh {all|build_image|copyboot2image|copyrootfs2image}"
-	exit 1
+	exit $EXIT_ERROR
 esac
 
-exit 0
+exit $EXIT_OK
 
 ########
