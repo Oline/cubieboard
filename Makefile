@@ -15,8 +15,12 @@ help:
 	@echo "patch_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX)"
 	@echo "prepare_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX)"
 	@echo ""
+	@echo "  -- kernel configuration --"
+	@echo "kernel_menuconfig:	make menuconfig in LINUX_DIR"
+	@echo "kernel_gconfig:		make gconfig in LINUX_DIR"
+	@echo ""
 	@echo "  -- kernel compilation --"
-	@echo "kernel_defconfig:	Write the default sun4i kernel configuration for cubieboard (v1, not v2)"
+	@echo "kernel_defconfig:	Write the default sun4i kernel configuration for cubieboard and cubieboard2"
 	@echo "kernel_compile:		make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) uImage modules"
 	@echo "with_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) uImage modules"
 	@echo "with_lesser_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) DISABLE_PAX_PLUGINS=y uImage modules"
@@ -82,6 +86,12 @@ endif
 else
 	@echo "File .config already exists."
 endif
+
+kernel_menuconfig:
+	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) menuconfig
+
+kernel_gconfig:
+	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) gconfig
 
 kernel_compile:
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) uImage modules
