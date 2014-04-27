@@ -60,9 +60,18 @@ configure_system()
     fi
     sudo bash -c "echo $HOSTNAME > etc/hostname"
 
+# check if a serial console already exist in the inittab file
+# we remove the error check to let grep output an error if the file does not have the line we look for
+    set +e
+    grep 'T0:2345:respawn:/sbin/getty -L ttyS0 115200 vt100' etc/inittab
+    RET_VALUE=$?
+    set -e
 
+    if [ 0 -ne "$RET_VALUE" ]; then
 # add serial console to connect to the system
     sudo bash -c 'echo "T0:2345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> etc/inittab'
+    fi
+
 # disable some local consoles
 # sed -i 's/^\([3-6]:.* tty[3-6]\)/#\1/' /etc/inittab
 
