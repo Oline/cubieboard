@@ -16,24 +16,24 @@ set -e
 
 do_debootstrap()
 {
-set -x
+    set -x
 
-sudo /usr/sbin/debootstrap --foreign --arch armhf wheezy .
+    sudo /usr/sbin/debootstrap --foreign --arch armhf wheezy .
 # --variant=minbase
 
 
 # that command is usefull to run target host binaries (ARM) on the build host  (x86)
-sudo cp /usr/bin/qemu-arm-static usr/bin
+    sudo cp /usr/bin/qemu-arm-static usr/bin
 
 # if you use grsecurity on build host, you should uncomment that line
 #sudo /sbin/paxctl -cm usr/bin/qemu-arm-static
 #sudo /sbin/paxctl -cpexrms usr/bin/qemu-arm-static
 
 # debootstrap second stage and packages configuration
-sudo LC_ALL=C LANGUAGE=C LANG=C chroot . /debootstrap/debootstrap --second-stage
-sudo LC_ALL=C LANGUAGE=C LANG=C chroot . dpkg --configure -a
+    sudo LC_ALL=C LANGUAGE=C LANG=C chroot . /debootstrap/debootstrap --second-stage
+    sudo LC_ALL=C LANGUAGE=C LANG=C chroot . dpkg --configure -a
 
-set +x
+    set +x
 }
 
 ##########
@@ -41,30 +41,30 @@ set +x
 configure_system()
 {
 # set root password
-echo "Please enter the root password: "
-sudo chroot . passwd
+    echo "Please enter the root password: "
+    sudo chroot . passwd
 
 # set hostname
-echo -n "Please enter the hostname of the host: "
+    echo -n "Please enter the hostname of the host: "
 
-if [ -z "$HOSTNAME" ]
-then
-    read HOSTNAME
-fi
-sudo bash -c "echo $HOSTNAME > etc/hostname"
+    if [ -z "$HOSTNAME" ]
+    then
+	read HOSTNAME
+    fi
+    sudo bash -c "echo $HOSTNAME > etc/hostname"
 
-set -x
+    set -x
 
 # add serial console to connect to the system
-sudo bash -c 'echo "T0:2345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> etc/inittab'
+    sudo bash -c 'echo "T0:2345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> etc/inittab'
 # disable some local consoles
 # sed -i 's/^\([3-6]:.* tty[3-6]\)/#\1/' /etc/inittab
 
 # copy basic templates of configuration files
-sudo cp ../fstab.base etc/fstab
-sudo cp ../interfaces.base etc/network/interfaces
+    sudo cp ../fstab.base etc/fstab
+    sudo cp ../interfaces.base etc/network/interfaces
 
-set +x
+    set +x
 }
 
 ##########
@@ -118,18 +118,18 @@ board_script()
 
     # grab template fex file for cubieboard
 
-case "$CUBIEBOARD_VERSION" in
-    cubieboard)
-	cp ../sunxi-boards/sys_config/a10/cubieboard.fex ../script.fex
-	;;
-    cubieboard2)
-	cp ../sunxi-boards/sys_config/a20/cubieboard2.fex ../script.fex
-	;;
-    *)
-	echo "Unknown Cubieboard version. Leaving..."
-	exit 1
-	;;
-esac
+    case "$CUBIEBOARD_VERSION" in
+	cubieboard)
+	    cp ../sunxi-boards/sys_config/a10/cubieboard.fex ../script.fex
+	    ;;
+	cubieboard2)
+	    cp ../sunxi-boards/sys_config/a20/cubieboard2.fex ../script.fex
+	    ;;
+	*)
+	    echo "Unknown Cubieboard version. Leaving..."
+	    exit 1
+	    ;;
+    esac
 
     # Set Ethernet MAC addr
     echo "" >> ../script.fex
@@ -187,3 +187,10 @@ esac
 exit 0
 
 ##########
+
+# Local Variables:
+# mode:sh
+# tab-width: 4
+# indent-tabs-mode: nil
+# End:
+# vim: filetype=sh:expandtab:shiftwidth=4:tabstop=4:softtabstop=4

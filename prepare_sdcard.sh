@@ -30,29 +30,29 @@ EXIT_OK=0
 
 build_image()
 {
-set -e
+    set -e
 
 # first  step, create a  local file and init it with  NULL values,
 # please note that potential error (disk full) is trapped (set -e)
 
-if [ ! -e "$IMG_NAME" ]; then
+    if [ ! -e "$IMG_NAME" ]; then
     # Start dd in background to be able to print its progress waiting it to finish
-    dd if=/dev/zero of="$IMG_NAME" bs=1M count="$IMG_SIZE" iflag=fullblock &
+        dd if=/dev/zero of="$IMG_NAME" bs=1M count="$IMG_SIZE" iflag=fullblock &
     # While dd is still running, show it's progress
-    while ps -p $! > /dev/null ; do
-	kill -USR1 "$!"
-	sleep "$DD_TIMEOUT"
-    done
-fi
+        while ps -p $! > /dev/null ; do
+	        kill -USR1 "$!"
+	        sleep "$DD_TIMEOUT"
+        done
+    fi
 
 # second step, create  3 partitions in  this image, the first  one for
 # boot software, the second for rootfs and the  last for FIXME. Please
 # note that alignment is done on multiple of IMG_SIZE
 
-/sbin/parted --script "$IMG_NAME" mklabel msdos
-/sbin/parted --script --align optimal "$IMG_NAME" mkpart primary 1 $(($PARTITION_SIZE + 1))
-/sbin/parted --script --align optimal "$IMG_NAME" mkpart primary $(($PARTITION_SIZE + 2)) $((($PARTITION_SIZE * 2) + 1))
-/sbin/parted --script --align optimal "$IMG_NAME" mkpart primary $((($PARTITION_SIZE * 2) + 2)) $IMG_SIZE
+    /sbin/parted --script "$IMG_NAME" mklabel msdos
+    /sbin/parted --script --align optimal "$IMG_NAME" mkpart primary 1 $(($PARTITION_SIZE + 1))
+    /sbin/parted --script --align optimal "$IMG_NAME" mkpart primary $(($PARTITION_SIZE + 2)) $((($PARTITION_SIZE * 2) + 1))
+    /sbin/parted --script --align optimal "$IMG_NAME" mkpart primary $((($PARTITION_SIZE * 2) + 2)) $IMG_SIZE
 
 # for each  internal partition in the  file, create  one device in the
 # kernel on the loopback (/dev/loopxxxx), so that it is later possible
@@ -64,17 +64,17 @@ fi
 # exemple, if your running kernel use raid and lvm devices)
 
 # !!! why do we remove error checking? !!!
-set +e
-RES=`sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"`
-if [ $? -ne 0 ]; then
+    set +e
+    RES=`sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"`
+    if [ $? -ne 0 ]; then
 	# some time, error  when using kpartx,  probably bad free internal
 	# loop  ressource, look at following error....
 	# mount: could  not find any free loop deviceBad address
 	# can't set up loop
-	echo "error when launching : sudo /sbin/kpartx -a -v -p $TMP_VAL $IMG_NAME"
-	exit $EXIT_ERROR
-fi
-set -e
+	    echo "error when launching : sudo /sbin/kpartx -a -v -p $TMP_VAL $IMG_NAME"
+	    exit $EXIT_ERROR
+    fi
+    set -e
 # now manage  output of command, we try  to extract the correct device
 # number for the loop device as in following exemple (/dev/loop0)
 # sudo /sbin/kpartx -a -v -p 22157 cubieboard2-201404090807-248.img
@@ -82,27 +82,27 @@ set -e
 # add map loop0221572 (253:74): 0 192512 linear /dev/loop0 196608
 # add map loop0221573 (253:75): 0 96256 linear /dev/loop0 389120
 
-MY_LOOP_DEV=`echo $RES |awk '{print $8}'`
-MY_LOOP_DEV=`basename $MY_LOOP_DEV`
+    MY_LOOP_DEV=`echo $RES |awk '{print $8}'`
+    MY_LOOP_DEV=`basename $MY_LOOP_DEV`
 
 # add current process id to loopdev
-LOOP_DEV=/dev/mapper/"$MY_LOOP_DEV""$TMP_VAL"
+    LOOP_DEV=/dev/mapper/"$MY_LOOP_DEV""$TMP_VAL"
 
-if [ -b "$LOOP_DEV"1 ]; then
-    sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"1
-fi
-if [ -b "$LOOP_DEV"2 ]; then
-    sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"2
-fi
-if [ -b "$LOOP_DEV"3 ]; then
-    sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"3
-fi
+    if [ -b "$LOOP_DEV"1 ]; then
+        sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"1
+    fi
+    if [ -b "$LOOP_DEV"2 ]; then
+        sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"2
+    fi
+    if [ -b "$LOOP_DEV"3 ]; then
+        sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"3
+    fi
 
 # free internal loop device ...
-sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
+    sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
 
 # print image output for human checking purpose
-sudo /sbin/parted "$IMG_NAME" print
+    sudo /sbin/parted "$IMG_NAME" print
 }
 
 ########
@@ -112,34 +112,34 @@ copyboot2image()
 # copy boot binaries to the image
     # Should match a device regexp or something like that.
     if [ -n "$IMG_NAME" ]; then
-	if [ -f "$IMG_NAME" ]; then
-	    if [ -f u-boot-sunxi/spl/sunxi-spl.bin ]; then
+	    if [ -f "$IMG_NAME" ]; then
+	        if [ -f u-boot-sunxi/spl/sunxi-spl.bin ]; then
 			# copy previously generated u-boot files on image
-			sudo dd \
-				if=u-boot-sunxi/spl/sunxi-spl.bin \
-				of="$IMG_NAME" \
-				bs=1024 \
-				seek=8 \
-				conv=nocreat,notrunc
+			    sudo dd \
+				    if=u-boot-sunxi/spl/sunxi-spl.bin \
+				    of="$IMG_NAME" \
+				    bs=1024 \
+				    seek=8 \
+				    conv=nocreat,notrunc
+	        else
+			    echo "You need to build u-boot first"
+			    exit $EXIT_ERROR
+	        fi
+	        if [ -f u-boot-sunxi/u-boot.bin ]; then
+			    sudo dd \
+				    if=u-boot-sunxi/u-boot.bin \
+				    of="$IMG_NAME" \
+				    bs=1024 \
+				    seek=32 \
+				    conv=nocreat,notrunc
+	        else
+			    echo "You need to build u-boot first"
+			    exit $EXIT_ERROR
+	        fi
 	    else
-			echo "You need to build u-boot first"
-			exit $EXIT_ERROR
+	        echo "$IMG_NAME does not seem to be a regular image file..."
+		    exit $EXIT_ERROR
 	    fi
-	    if [ -f u-boot-sunxi/u-boot.bin ]; then
-			sudo dd \
-				if=u-boot-sunxi/u-boot.bin \
-				of="$IMG_NAME" \
-				bs=1024 \
-				seek=32 \
-				conv=nocreat,notrunc
-	    else
-			echo "You need to build u-boot first"
-			exit $EXIT_ERROR
-	    fi
-	else
-	    echo "$IMG_NAME does not seem to be a regular image file..."
-		exit $EXIT_ERROR
-	fi
     else
 		echo "The variable IMG_NAME does not seem to exist..."
 		exit $EXIT_ERROR
@@ -192,24 +192,31 @@ copyrootfs2image()
 
 case "$1" in
     all)
-	build_image
-	copyboot2image
-	copyrootfs2image
-	;;
+	    build_image
+	    copyboot2image
+	    copyrootfs2image
+	    ;;
     build_image)
-	build_image
-	;;
+	    build_image
+	    ;;
     copyboot2image)
-	copyboot2image
-	;;
+	    copyboot2image
+	    ;;
     copyrootfs2image)
-	copyrootfs2image
-	;;
+	    copyrootfs2image
+	    ;;
     *)
-	echo "Usage: prepare_sdcard.sh {all|build_image|copyboot2image|copyrootfs2image}"
-	exit $EXIT_ERROR
+	    echo "Usage: prepare_sdcard.sh {all|build_image|copyboot2image|copyrootfs2image}"
+	    exit $EXIT_ERROR
 esac
 
 exit $EXIT_OK
 
 ########
+
+# Local Variables:
+# mode:sh
+# tab-width: 4
+# indent-tabs-mode: nil
+# End:
+# vim: filetype=sh:expandtab:shiftwidth=4:tabstop=4:softtabstop=4
