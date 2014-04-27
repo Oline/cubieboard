@@ -42,18 +42,24 @@ configure_system()
 {
 # set root password
     echo "Please enter the root password: "
-    sudo chroot . passwd
+
+    if [ -z "$ROOT_PASSWORD" ]; then
+    # hiding the root password when typed could be a good idea... (stty)
+	read ROOT_PASSWORD
+    fi
+    sudo bash -c "echo -e root:$ROOT_PASSWORD | chroot . chpasswd"
+
+# this set -x does not appear before previous sudo, not to show the root password on the output.
+    set -x
 
 # set hostname
-    echo -n "Please enter the hostname of the host: "
+    echo "Please enter the hostname of the host: "
 
-    if [ -z "$HOSTNAME" ]
-    then
+    if [ -z "$HOSTNAME" ]; then
 	read HOSTNAME
     fi
     sudo bash -c "echo $HOSTNAME > etc/hostname"
 
-    set -x
 
 # add serial console to connect to the system
     sudo bash -c 'echo "T0:2345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> etc/inittab'
