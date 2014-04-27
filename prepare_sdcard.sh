@@ -193,24 +193,47 @@ compress_image()
 {
     case "$COMPRESS_IMG" in
         "gz")
+            echo "Compressing image using gzip"
             gzip "$IMG_NAME"
             md5sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".md5
             ;;
         "bz")
-            bzip2 "$IMG_NAME"
+            echo "Compressing image using bzip2"
+            bzip2 -v "$IMG_NAME"
             md5sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".md5
             ;;
         "xz")
-            xz -z "$IMG_NAME"
+            echo "Compressing image using xz"
+            xz -zv "$IMG_NAME"
             md5sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".md5
             ;;
         "none")
+            echo "Not compressing the image"
             # do nothing
             ;;
         *)
             # do nothing
             ;;
     esac
+}
+
+########
+
+# Calling this function alone is useless because the IMG_NAME will surely be wrong...
+hash_image()
+{
+    if [ "yes" == "$IMG_HASH_MD5" ]; then
+        echo "Creating md5 hash"
+        md5sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".md5
+    fi
+    if [ "yes" == "$IMG_HASH_SHA1" ]; then
+        echo "Creating sha1 hash"
+        sha1sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".sha1
+    fi
+    if [ "yes" == "$IMG_HASH_SHA256" ]; then
+        echo "Creating sha256 hash"
+        sha256sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".sha256
+    fi
 }
 
 ########
@@ -223,6 +246,8 @@ case "$1" in
 	    copyboot2image
 	    copyrootfs2image
 	    compress_image
+	    compress_image
+        hash_image
 	    ;;
     build_image)
 	    build_image
@@ -236,8 +261,11 @@ case "$1" in
     compress_image)
 	    compress_image
 	    ;;
+    hash_image)
+	    hash_image
+	    ;;
     *)
-	    echo "Usage: prepare_sdcard.sh {all|build_image|copyboot2image|copyrootfs2image|compress_image}"
+	    echo "Usage: prepare_sdcard.sh {all|build_image|copyboot2image|copyrootfs2image|compress_image|hash_image}"
 	    exit $EXIT_ERROR
 esac
 
