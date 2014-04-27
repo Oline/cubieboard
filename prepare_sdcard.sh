@@ -187,6 +187,33 @@ copyrootfs2image()
 }
 
 ########
+
+# Calling this function alone is useless because the IMG_NAME will surely be wrong...
+compress_image()
+{
+    case "$COMPRESS_IMG" in
+        "gz")
+            gzip "$IMG_NAME"
+            md5sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".md5
+            ;;
+        "bz")
+            bzip2 "$IMG_NAME"
+            md5sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".md5
+            ;;
+        "xz")
+            xz -z "$IMG_NAME"
+            md5sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".md5
+            ;;
+        "none")
+            # do nothing
+            ;;
+        *)
+            # do nothing
+            ;;
+    esac
+}
+
+########
 # MAIN #
 ########
 
@@ -195,6 +222,7 @@ case "$1" in
 	    build_image
 	    copyboot2image
 	    copyrootfs2image
+	    compress_image
 	    ;;
     build_image)
 	    build_image
@@ -205,8 +233,11 @@ case "$1" in
     copyrootfs2image)
 	    copyrootfs2image
 	    ;;
+    compress_image)
+	    compress_image
+	    ;;
     *)
-	    echo "Usage: prepare_sdcard.sh {all|build_image|copyboot2image|copyrootfs2image}"
+	    echo "Usage: prepare_sdcard.sh {all|build_image|copyboot2image|copyrootfs2image|compress_image}"
 	    exit $EXIT_ERROR
 esac
 
