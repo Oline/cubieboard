@@ -18,7 +18,7 @@ do_debootstrap()
 {
     set -x
 
-    sudo /usr/sbin/debootstrap --foreign --arch armhf wheezy .
+    sudo /usr/sbin/debootstrap --foreign --arch armhf wheezy . "$DEBOOTSTRAP_MIRROR"
 # --variant=minbase
 
 
