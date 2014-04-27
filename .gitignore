@@ -1,3 +1,6 @@
 *~
 chroot-armhf
 *.img
+*.img.gz
+*.img.bz2
+*.img.xz
