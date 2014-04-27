@@ -222,17 +222,30 @@ compress_image()
 # Calling this function alone is useless because the IMG_NAME will surely be wrong...
 hash_image()
 {
-    if [ "yes" == "$IMG_HASH_MD5" ]; then
+    # get right image name
+    if [ -f "$IMG_NAME"."$COMPRESS_IMG" ]; then
+        IMG="$IMG_NAME"."$COMPRESS_IMG"
+    else
+        if [ -f "$IMG_NAME" ]; then
+            IMG="$IMG_NAME"
+        else
+            echo "Couldn't find the image for hash computation"
+		exit $EXIT_ERROR
+        fi
+    fi
+
+    # now we have the right name, let's compute hashes
+    if [ "yes" = "$IMG_HASH_MD5" ]; then
         echo "Creating md5 hash"
-        md5sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".md5
+        md5sum "$IMG" >> "$IMG".md5
     fi
-    if [ "yes" == "$IMG_HASH_SHA1" ]; then
+    if [ "yes" = "$IMG_HASH_SHA1" ]; then
         echo "Creating sha1 hash"
-        sha1sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".sha1
+        sha1sum "$IMG" >> "$IMG".sha1
     fi
-    if [ "yes" == "$IMG_HASH_SHA256" ]; then
+    if [ "yes" = "$IMG_HASH_SHA256" ]; then
         echo "Creating sha256 hash"
-        sha256sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".sha256
+        sha256sum "$IMG" >> "$IMG".sha256
     fi
 }
 
