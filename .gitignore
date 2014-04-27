@@ -4,3 +4,6 @@ chroot-armhf
 *.img.gz
 *.img.bz2
 *.img.xz
+*.md5
+*.sha1
+*.sha256
