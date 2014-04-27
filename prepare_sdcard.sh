@@ -77,7 +77,7 @@ fi
 set -e
 # now manage  output of command, we try  to extract the correct device
 # number for the loop device as in following exemple (/dev/loop0)
-# sudo /sbin/kpartx -a -v  -p 22157 cubieboard2-201404090807-248.img 
+# sudo /sbin/kpartx -a -v -p 22157 cubieboard2-201404090807-248.img
 # add map loop0221571 (253:73): 0 192512 linear /dev/loop0 2048
 # add map loop0221572 (253:74): 0 192512 linear /dev/loop0 196608
 # add map loop0221573 (253:75): 0 96256 linear /dev/loop0 389120
@@ -114,7 +114,7 @@ copyboot2image()
     if [ -n "$IMG_NAME" ]; then
 	if [ -f "$IMG_NAME" ]; then
 	    if [ -f u-boot-sunxi/spl/sunxi-spl.bin ]; then
-			# copy previously generated u-boot files on image 
+			# copy previously generated u-boot files on image
 			sudo dd \
 				if=u-boot-sunxi/spl/sunxi-spl.bin \
 				of="$IMG_NAME" \
@@ -156,7 +156,7 @@ copyrootfs2image()
     sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"
     if [ -n "$LOOP_DEV"1 ] ;then
 		if [ -b "$LOOP_DEV"1 ] ;then
-            # CHROOT_DIR      is  created        when   launching    
+            # CHROOT_DIR      is  created        when   launching
             # make_debootstrap.sh, so if not done, not possible to make
             # cd  "$CHROOT_DIR" because not  existant,  and we must be
             # sure to mount device, otherwise not  possible to
