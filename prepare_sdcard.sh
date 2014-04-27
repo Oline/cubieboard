@@ -110,9 +110,8 @@ copyboot2image()
 {
 # copy boot binaries to the image
     # Should match a device regexp or something like that.
-    if [ -n "$IMG_NAME" ] ;then
-	if [ -f "$IMG_NAME" ]
-	then
+    if [ -n "$IMG_NAME" ]; then
+	if [ -f "$IMG_NAME" ]; then
 	    # cd u-boot-sunxi
 	    if [ -f u-boot-sunxi/spl/sunxi-spl.bin ]; then
 			sudo dd if=u-boot-sunxi/spl/sunxi-spl.bin of="$IMG_NAME" bs=1024 seek=8 conv=nocreat,notrunc
@@ -143,9 +142,8 @@ copyrootfs2image()
     # Should match a device regexp or something like that.
     set +e
     sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"
-    if [ -n "$LOOP_DEV"1 ] ;then
-	if [ -b "$LOOP_DEV"1 ]
-	then
+    if [ -n "$LOOP_DEV"1 ]; then
+	if [ -b "$LOOP_DEV"1 ]; then
 	    sudo mount "$LOOP_DEV"1 /mnt
 	    cd "$CHROOT_DIR"
 	    sudo bash -c "tar --exclude=qemu-arm-static -cf - . | tar -C /mnt -xvf -"
