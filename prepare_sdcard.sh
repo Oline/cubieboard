@@ -113,10 +113,10 @@ copyboot2image()
     # Should match a device regexp or something like that.
     if [ -n "$IMG_NAME" ]; then
 	    if [ -f "$IMG_NAME" ]; then
-	        if [ -f u-boot-sunxi/spl/sunxi-spl.bin ]; then
+	        if [ -f "$UBOOT_DIR"/spl/sunxi-spl.bin ]; then
 			# copy previously generated u-boot files on image
 			    sudo dd \
-				    if=u-boot-sunxi/spl/sunxi-spl.bin \
+				    if="$UBOOT_DIR"/spl/sunxi-spl.bin \
 				    of="$IMG_NAME" \
 				    bs=1024 \
 				    seek=8 \
@@ -125,9 +125,9 @@ copyboot2image()
 			    echo "You need to build u-boot first"
 			    exit $EXIT_ERROR
 	        fi
-	        if [ -f u-boot-sunxi/u-boot.bin ]; then
+	        if [ -f "$UBOOT_DIR"/u-boot.bin ]; then
 			    sudo dd \
-				    if=u-boot-sunxi/u-boot.bin \
+				    if="$UBOOT_DIR"/u-boot.bin \
 				    of="$IMG_NAME" \
 				    bs=1024 \
 				    seek=32 \
