@@ -246,7 +246,6 @@ case "$1" in
 	    copyboot2image
 	    copyrootfs2image
 	    compress_image
-	    compress_image
         hash_image
 	    ;;
     build_image)
