@@ -20,7 +20,7 @@ help:
 	@echo "kernel_gconfig:		make gconfig in LINUX_DIR"
 	@echo ""
 	@echo "  -- kernel compilation --"
-	@echo "kernel_defconfig:	Write the default sun4i kernel configuration for cubieboard and cubieboard2"
+	@echo "kernel_defconfig:	Write the default kernel configuration for cubieboard or cubieboard2"
 	@echo "kernel_compile:		make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) uImage modules"
 	@echo "with_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) uImage modules"
 	@echo "with_lesser_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) DISABLE_PAX_PLUGINS=y uImage modules"
