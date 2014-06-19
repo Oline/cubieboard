@@ -115,7 +115,15 @@ kernel_gconfig:
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) gconfig
 
 kernel_compile:
-	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) uImage modules
+# extract now current SHA1 linux kernel version source in git linux-sunxi repository
+# and force this version to the Makefile in order to obtain this sha1 later in 
+# uname -a command and SNMP MIB
+	cd $(LINUX_DIR) && make \
+	EXTRAVERSION=`git rev-parse --short HEAD` \
+	ARCH=arm \
+	CROSS_COMPILE=$(GCC_PREFIX) \
+	-j $(JOBS) \
+	uImage modules
 
 with_grsecurity:
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) uImage modules
