@@ -1,6 +1,8 @@
 #! /usr/bin/env sh
 
 # Copyright (c) 2013-2014, Sylvain Leroy <sylvain@unmondelibre.fr>
+#                    2014, Jean-Marc Lacroix <jeanmarc.lacroix@free.fr>
+#                    2014, Philippe Thierry <phil@reseau-libre.net>
 
 # This file is part of CBoard.
 
