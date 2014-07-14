@@ -32,6 +32,10 @@ help:
 	@echo "debootstrap:		create the root_fs (need testing)"
 	@echo "prepare_sdcard:		install u-boot and the root_fs to the sdcard"
 	@echo ""
+	@echo "  -- checking targets --"
+	@echo "check:			Use qemu to check the generated image"
+	@echo "			$(QEMU_SYSTEM_ARM) -machine cubieboard -m $(QEMU_MEMORY_SIZE) -nographic -serial stdio -kernel $(LINUX_DIR)/arch/arm/boot/uImage -append \"root=/dev/mmcblk0p1 rootwait panic=10\""
+	@echo ""
 	@echo "  -- cleaning targets --"
 	@echo "kernel_clean:		"
 	@echo "kernel_distclean:	"
@@ -128,6 +132,11 @@ debootstrap:
 
 prepare_sdcard:
 	./prepare_sdcard.sh all
+
+# Check
+
+check:
+	$(QEMU_SYSTEM_ARM) -machine cubieboard -m $(QEMU_MEMORY_SIZE) -nographic -serial stdio -kernel $(LINUX_DIR)/arch/arm/boot/uImage -append "root=/dev/mmcblk0p1 rootwait panic=10"
 
 # Cleaning stuff
 
