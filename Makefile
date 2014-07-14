@@ -119,7 +119,7 @@ kernel_compile:
 # and force this version to the Makefile in order to obtain this sha1 later in 
 # uname -a command and SNMP MIB
 	cd $(LINUX_DIR) && make \
-	EXTRAVERSION=`git rev-parse --short HEAD` \
+	EXTRAVERSION=-`git rev-parse --short HEAD` \
 	ARCH=arm \
 	CROSS_COMPILE=$(GCC_PREFIX) \
 	-j $(JOBS) \
