@@ -115,10 +115,12 @@ kernel_menuconfig:
 kernel_gconfig:
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) gconfig
 
-kernel_compile:
-# extract now current SHA1 linux kernel version source in git linux-sunxi repository
-# and force this version to the Makefile in order to obtain this sha1 later in 
-# uname -a command and SNMP MIB
+kernel_compile: $(LINUX_DIR)/arch/arm/boot/uImage
+
+$(LINUX_DIR)/arch/arm/boot/uImage:
+# extract current SHA1 from git linux kernel version source
+# and append this version to the kernel version in order to have this SHA1
+# matched in command : uname -a command and SNMP MIB
 	cd $(LINUX_DIR) && make \
 	EXTRAVERSION=-`git rev-parse --short HEAD` \
 	ARCH=arm \
@@ -141,7 +143,9 @@ kernel_distclean:
 
 # bootloader u-boot compile
 
-u-boot:
+u-boot: $(UBOOT_DIR)/spl/sunxi-spl.bin
+
+$(UBOOT_DIR)/spl/sunxi-spl.bin:
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) $(CUBIEBOARD_VERSION)_config
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS)
 
@@ -161,7 +165,7 @@ prepare_sdcard:
 
 # Check
 
-check:
+check: $(LINUX_DIR)/arch/arm/boot/uImage
 	$(QEMU_SYSTEM_ARM) -machine cubieboard -m $(QEMU_MEMORY_SIZE) -nographic -serial stdio -kernel $(LINUX_DIR)/arch/arm/boot/uImage -append "root=/dev/mmcblk0p1 rootwait panic=10"
 
 # Cleaning stuff
