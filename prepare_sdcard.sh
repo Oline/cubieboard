@@ -107,7 +107,7 @@ build_image()
 # add current process id to loopdev
     LOOP_DEV=/dev/mapper/"$MY_LOOP_DEV""$TMP_VAL"
 
-    if [ -b "$LOOP_DEV"1 ]; then
+    if [ -b "$LOOP_DEV"1 ] ; then
         sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"1
     fi
     if [ -b "$LOOP_DEV"2 ]; then
@@ -173,8 +173,8 @@ copyrootfs2image()
     # Should match a device regexp or something like that.
     set +e
     sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"
-    if [ -n "$LOOP_DEV"1 ] ;then
-		if [ -b "$LOOP_DEV"1 ] ;then
+    if [ -n "$LOOP_DEV" ] ;then
+        if [ -b "$LOOP_DEV"1 ] ;then
             # CHROOT_DIR      is  created        when   launching
             # make_debootstrap.sh, so if not done, not possible to make
             # cd  "$CHROOT_DIR" because not  existant,  and we must be
@@ -272,6 +272,7 @@ hash_image()
 # MAIN #
 ########
 
+    set -x
 case "$1" in
     all)
 	    build_image

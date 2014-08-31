@@ -115,7 +115,7 @@ kernel_menuconfig:
 kernel_gconfig:
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) gconfig
 
-kernel_compile: $(LINUX_DIR)/arch/arm/boot/uImage
+kernel_compile: $(LINUX_DIR)/arch/arm/boot/uImage $(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dtb
 
 $(LINUX_DIR)/arch/arm/boot/uImage: $(LINUX_DIR)/.config
 # extract current SHA1 from git linux kernel version source
@@ -126,7 +126,15 @@ $(LINUX_DIR)/arch/arm/boot/uImage: $(LINUX_DIR)/.config
 	ARCH=arm \
 	CROSS_COMPILE=$(GCC_PREFIX) \
 	-j $(JOBS) \
-	uImage modules
+	uImage modules LOADADDR=0x40008000
+
+$(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dtb: $(LINUX_DIR)/.config
+	cd $(LINUX_DIR) && make \
+	EXTRAVERSION=-`git rev-parse --short HEAD` \
+	ARCH=arm \
+	CROSS_COMPILE=$(GCC_PREFIX) \
+	-j $(JOBS) \
+	dtbs LOADADDR=0x40008000
 
 with_grsecurity:
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) uImage modules

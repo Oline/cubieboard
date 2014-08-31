@@ -179,6 +179,10 @@ board_script()
     sudo mv ../script.bin boot/
     rm ../script.fex
 
+    # Adding fex manipulation binary to change Ethernet MAC addr at boot time using u-boot
+    sudo cp ../sunxi-tools/fexc root/
+    sudo chown root:root root/fexc
+
     set +x
 }
 
