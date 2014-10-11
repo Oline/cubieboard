@@ -135,6 +135,7 @@ install_kernel()
     set -x
 # copy linux image to the root_fs
     sudo cp ../$LINUX_DIR/arch/arm/boot/uImage boot
+    sudo cp ../$LINUX_DIR/arch/arm/boot/dts/sun7i-a20-cubieboard2.dtb boot
     sudo make -C ../$LINUX_DIR INSTALL_MOD_PATH=`pwd` ARCH=arm CROSS_COMPILE="$GCC_PREFIX" modules_install
 
 # add some kernel boot args
@@ -152,36 +153,36 @@ board_script()
 
     # grab template fex file for cubieboard
 
-    case "$CUBIEBOARD_VERSION" in
-	cubieboard)
-	    cp ../sunxi-boards/sys_config/a10/cubieboard.fex ../script.fex
-	    ;;
-	cubieboard2)
-	    cp ../sunxi-boards/sys_config/a20/cubieboard2.fex ../script.fex
-	    ;;
-	*)
-	    echo "Unknown Cubieboard version. Leaving..."
-	    exit 1
-	    ;;
-    esac
+    # case "$CUBIEBOARD_VERSION" in
+	# cubieboard)
+	#     cp ../sunxi-boards/sys_config/a10/cubieboard.fex ../script.fex
+	#     ;;
+	# cubieboard2)
+	#     cp ../sunxi-boards/sys_config/a20/cubieboard2.fex ../script.fex
+	#     ;;
+	# *)
+	#     echo "Unknown Cubieboard version. Leaving..."
+	#     exit 1
+	#     ;;
+    # esac
 
     # Set Ethernet MAC addr
-    echo "" >> ../script.fex
-    echo "[dynamic]" >> ../script.fex
-    echo "MAC = \"$MACADDR\"" >> ../script.fex
+    # echo "" >> ../script.fex
+    # echo "[dynamic]" >> ../script.fex
+    # echo "MAC = \"$MACADDR\"" >> ../script.fex
 
     # Change the LEDs behavior
     #grep leds_trigger ../script.fex
 
     # created the binary version of the fex file
-    ../sunxi-tools/fex2bin  ../script.fex ../script.bin
-    sudo chown root:root ../script.bin
-    sudo mv ../script.bin boot/
-    rm ../script.fex
+    # ../sunxi-tools/fex2bin  ../script.fex ../script.bin
+    # sudo chown root:root ../script.bin
+    # sudo mv ../script.bin boot/
+    # rm ../script.fex
 
     # Adding fex manipulation binary to change Ethernet MAC addr at boot time using u-boot
-    sudo cp ../sunxi-tools/fexc root/
-    sudo chown root:root root/fexc
+    # sudo cp ../sunxi-tools/fexc root/
+    # sudo chown root:root root/fexc
 
     set +x
 }

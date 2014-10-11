@@ -76,7 +76,7 @@ help:
 	@echo ""
 
 all:  u-boot kernel_defconfig kernel_compile debootstrap prepare_sdcard
-	@echo "Done. You can now use your cubiboard :)"
+	@echo "Done. You can now use your $(CUBIEBOARD_VERSION) :)"
 
 # repositories update
 
@@ -128,7 +128,7 @@ $(LINUX_DIR)/arch/arm/boot/uImage: $(LINUX_DIR)/.config
 	-j $(JOBS) \
 	uImage modules LOADADDR=0x40008000
 
-$(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dtb: $(LINUX_DIR)/.config
+$(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dtb: $(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts $(LINUX_DIR)/.config
 	cd $(LINUX_DIR) && make \
 	EXTRAVERSION=-`git rev-parse --short HEAD` \
 	ARCH=arm \
@@ -136,11 +136,11 @@ $(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dtb: $(LINUX_DIR)/.config
 	-j $(JOBS) \
 	dtbs LOADADDR=0x40008000
 
-with_grsecurity:
-	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) uImage modules
+# with_grsecurity:
+# 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) uImage modules
 
-with_lesser_grsecurity:
-	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) DISABLE_PAX_PLUGINS=y -j $(JOBS) uImage modules
+# with_lesser_grsecurity:
+# 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) DISABLE_PAX_PLUGINS=y -j $(JOBS) uImage modules
 
 kernel_clean:
 	cd $(LINUX_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) clean
@@ -151,7 +151,7 @@ kernel_distclean:
 
 # bootloader u-boot compile
 
-u-boot: $(UBOOT_DIR)/spl/sunxi-spl.bin
+u-boot: $(UBOOT_DIR)/u-boot-sunxi-with-spl.bin
 
 $(UBOOT_DIR)/spl/sunxi-spl.bin:
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) $(CUBIEBOARD_VERSION)_config
