@@ -153,7 +153,7 @@ kernel_distclean:
 
 u-boot: $(UBOOT_DIR)/u-boot-sunxi-with-spl.bin
 
-$(UBOOT_DIR)/spl/sunxi-spl.bin:
+$(UBOOT_DIR)/u-boot-sunxi-with-spl.bin:
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) $(CUBIEBOARD_VERSION)_config
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS)
 
