@@ -9,4 +9,4 @@
 	url = git://github.com/linux-sunxi/sunxi-boards.git
 [submodule "linux-stable"]
 	path = linux-stable
-	url = ./linux-stable/
+	url = git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
