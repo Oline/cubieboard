@@ -153,11 +153,11 @@ board_script()
 
     # grab template fex file for cubieboard
 
-    # case "$CUBIEBOARD_VERSION" in
-	# cubieboard)
+    # case "$CUBIEBOARD_NAME" in
+	# Cubieboard)
 	#     cp ../sunxi-boards/sys_config/a10/cubieboard.fex ../script.fex
 	#     ;;
-	# cubieboard2)
+	# Cubieboard2)
 	#     cp ../sunxi-boards/sys_config/a20/cubieboard2.fex ../script.fex
 	#     ;;
 	# *)

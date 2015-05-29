@@ -44,7 +44,7 @@ help:
 	@echo "with_lesser_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) DISABLE_PAX_PLUGINS=y uImage modules"
 	@echo ""
 	@echo "  -- u-boot compilation --"
-	@echo "u-boot:			make CROSS_COMPILE=$(GCC_PREFIX) $(CUBIEBOARD_VERSION)_config"
+	@echo "u-boot:			make CROSS_COMPILE=$(GCC_PREFIX) $(CUBIEBOARD_NAME)_config"
 	@echo ""
 	@echo "  -- root_fs & sdcard partitionning --"
 	@echo "debootstrap:		create the root_fs (need testing)"
@@ -68,7 +68,7 @@ help:
 	@echo "	JOBS			=	$(JOBS)"
 	@echo "	HOSTNAME		=	$(HOSTNAME)"
 	@echo "	PACKAGES		=	$(PACKAGES)"
-	@echo "	CUBIEBOARD_VERSION	=	$(CUBIEBOARD_VERSION)"
+	@echo "	CUBIEBOARD_NAME		=	$(CUBIEBOARD_NAME)"
 	@echo "	FORMAT_SDCARD		=	$(FORMAT_SDCARD)"
 	@echo "	SDCARD_DEVICE		=	$(SDCARD_DEVICE)"
 	@echo ""
@@ -76,7 +76,7 @@ help:
 	@echo ""
 
 all:  u-boot kernel_defconfig kernel_compile debootstrap prepare_sdcard
-	@echo "Done. You can now use your $(CUBIEBOARD_VERSION) :)"
+	@echo "Done. You can now use your $(CUBIEBOARD_NAME) :)"
 
 # repositories update
 
@@ -99,10 +99,10 @@ prepare_grsecurity:
 
 kernel_defconfig:
 ifeq ($(findstring .config,$(wildcard $(LINUX_DIR)/.config)), ) # check if .config can be erased, else do not erase it
-ifeq ($(CUBIEBOARD_VERSION), cubieboard)
+ifeq ($(CUBIEBOARD_NAME), Cubieboard)
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sun4i_defconfig
 endif
-ifeq ($(CUBIEBOARD_VERSION), cubieboard2)
+ifeq ($(CUBIEBOARD_NAME), Cubieboard2)
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sun7i_defconfig
 endif
 else
@@ -154,7 +154,7 @@ kernel_distclean:
 u-boot: $(UBOOT_DIR)/u-boot-sunxi-with-spl.bin
 
 $(UBOOT_DIR)/u-boot-sunxi-with-spl.bin:
-	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) $(CUBIEBOARD_VERSION)_config
+	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) $(CUBIEBOARD_NAME)_config
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS)
 
 u-boot_clean:
