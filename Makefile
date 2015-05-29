@@ -105,6 +105,9 @@ endif
 ifeq ($(CUBIEBOARD_NAME), Cubieboard2)
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sun7i_defconfig
 endif
+ifeq ($(CUBIEBOARD_NAME), Cubietruck)
+	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sun7i_defconfig
+endif
 else
 	@echo "File .config already exists."
 endif
