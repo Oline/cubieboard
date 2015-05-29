@@ -1,4 +1,5 @@
 *~
+*.sw?
 chroot-armhf
 *.img
 *.img.gz
