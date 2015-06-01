@@ -1,11 +1,5 @@
 *~
 *.sw?
-chroot-armhf
-*.img
-*.img.gz
-*.img.bz2
-*.img.xz
-*.md5
-*.sha1
-*.sha256
+/chroot-armhf
 /boot.cmd
+/images

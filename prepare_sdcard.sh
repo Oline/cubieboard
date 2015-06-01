@@ -39,7 +39,8 @@ IMG_SIZE=2048
 CONF_SIZE=50
 PARTITION_SIZE=$((($IMG_SIZE - $CONF_SIZE) / 2))
 FS_TYPE=ext2
-IMG_NAME="$CUBIEBOARD_NAME"-"$BUILD_SERIAL"-"$IMG_SIZE".img
+OUT_DIR=images
+IMG_NAME="$OUT_DIR/$CUBIEBOARD_NAME"-"$BUILD_SERIAL"-"$IMG_SIZE".img
 EXIT_ERROR=1
 EXIT_OK=0
 
@@ -262,6 +263,8 @@ hash_image()
 ########
 
     set -x
+    mkdir -p "$OUT_DIR"
+
 case "$1" in
     all)
 	    build_image
