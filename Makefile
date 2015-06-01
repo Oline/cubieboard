@@ -168,7 +168,10 @@ u-boot_distclean:
 
 # Debootstrap
 
-debootstrap:
+boot.cmd: boot.cmd.in makefile.vars
+	$(SED) 's/@DTB@/$(DTB)/g' $< > $@
+
+debootstrap: boot.cmd
 	./make_debootstrap.sh all
 
 prepare_sdcard:
