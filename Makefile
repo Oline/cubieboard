@@ -22,6 +22,10 @@ export
 
 include makefile.vars
 
+.PHONY: help all initsm updatesm patch_grsecurity prepare_grsecurity kernel_menuconfig
+.PHONY: kernel_gconfig kernel_defconfig kernel_compile with_grsecurity with_lesser_grsecurity
+.PHONY: u-boot debootstrap prepare_sdcard check kernel_clean kernel_distclean clean distclean
+
 help:
 	@echo "What you can do:"
 	@echo ""
