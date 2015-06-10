@@ -37,7 +37,7 @@ do_debootstrap()
 {
     set -x
 
-    sudo /usr/sbin/debootstrap --foreign --arch armhf wheezy . "$DEBOOTSTRAP_MIRROR"
+    sudo /usr/sbin/debootstrap --foreign --arch "$DEB_ARCH" "$DEB_SUITE" . "$DEBOOTSTRAP_MIRROR"
 # --variant=minbase
 
 
@@ -111,8 +111,9 @@ update_system_and_custom_packages()
     sudo cp /etc/resolv.conf etc
 
 # updating root_fs
-    sudo bash -c "echo deb http://http.debian.net/debian/ wheezy main contrib non-free > etc/apt/sources.list"
-    sudo bash -c "echo deb http://security.debian.org/ wheezy/updates main contrib non-free >> etc/apt/sources.list"
+    sudo bash -c "echo deb http://http.debian.net/debian/ $DEB_SUITE main contrib non-free > etc/apt/sources.list"
+    sudo bash -c "echo deb http://security.debian.org/ $DEB_SUITE/updates main contrib non-free >> etc/apt/sources.list"
+    sudo mkdir -p etc/apt/apt.conf.d
     sudo chroot . apt-get update
     sudo chroot . apt-get upgrade --yes
 

@@ -190,4 +190,4 @@ clean: u-boot_clean kernel_clean
 
 
 distclean: u-boot_distclean kernel_distclean
-	sudo rm -rf chroot-armhf/
+	sudo rm -rf $(CHROOT_DIR)
