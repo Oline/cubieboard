@@ -3,10 +3,10 @@
 	url = https://github.com/jwrdegoede/u-boot-sunxi.git
 [submodule "sunxi-tools"]
 	path = sunxi-tools
-	url = git://github.com/linux-sunxi/sunxi-tools.git
+	url = http://github.com/linux-sunxi/sunxi-tools.git
 [submodule "sunxi-boards"]
 	path = sunxi-boards
-	url = git://github.com/linux-sunxi/sunxi-boards.git
+	url = http://github.com/linux-sunxi/sunxi-boards.git
 [submodule "linux-stable"]
 	path = linux-stable
-	url = git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+	url = http://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
