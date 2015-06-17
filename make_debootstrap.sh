@@ -117,6 +117,17 @@ update_system_and_custom_packages()
     sudo chroot . apt-get update
     sudo chroot . apt-get upgrade --yes
 
+    # Install brcmfmac firmware for Cubietruck (wifi/BT)
+    if [ x"$CUBIEBOARD_NAME" = "xCubietruck" ]; then
+        sudo chroot . apt-get install --yes firmware-brcm80211
+        if [ ! -d lib/firmware/brcm ]; then
+            echo "*** Failed to install firmware" 1>&2
+            exit 1
+        else
+            sudo cp ../resources/brcmfmac43362-sdio.txt lib/firmware/brcm/
+        fi
+    fi
+
 # install additionnals packages
 ### Here $PACKAGES MUST be without double quotes or apt-get won't understand the list of packages
     sudo chroot . apt-get install --yes $PACKAGES
