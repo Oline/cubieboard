@@ -85,13 +85,13 @@ build_image()
 
 # !!! why do we remove error checking? !!!
     set +e
-    RES=`sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"`
+    RES=`sudo /sbin/kpartx -a -v -s -p "$TMP_VAL" "$IMG_NAME"`
     if [ $? -ne 0 ]; then
 	# some time, error  when using kpartx,  probably bad free internal
 	# loop  ressource, look at following error....
 	# mount: could  not find any free loop deviceBad address
 	# can't set up loop
-	    echo "error when launching : sudo /sbin/kpartx -a -v -p $TMP_VAL $IMG_NAME"
+	    echo "error when launching : sudo /sbin/kpartx -a -v -s -p $TMP_VAL $IMG_NAME"
 	    exit $EXIT_ERROR
     fi
     set -e
@@ -162,9 +162,17 @@ copyrootfs2image()
 # copy root_fs to the image
     # Should match a device regexp or something like that.
     set +e
-    sudo /sbin/kpartx -a -v -p "$TMP_VAL" "$IMG_NAME"
-    if [ -n "$LOOP_DEV" ] ;then
-        if [ -b "$LOOP_DEV"1 ] ;then
+    sudo /sbin/kpartx -a -v -s -p "$TMP_VAL" "$IMG_NAME"
+    if [ -n "$LOOP_DEV" ]; then
+        # Actual loop dev name
+        LOOP_DEV="${LOOP_DEV}1"
+
+        # If symlink, de-reference
+        if [ -h "$LOOP_DEV"1 ]; then
+            LOOP_DEV="$(readlink -f "$LOOP_DEV")"
+        fi
+
+        if [ -b "$LOOP_DEV" ]; then
             # CHROOT_DIR      is  created        when   launching
             # make_debootstrap.sh, so if not done, not possible to make
             # cd  "$CHROOT_DIR" because not  existant,  and we must be
@@ -172,7 +180,7 @@ copyrootfs2image()
             # free loop device later because 'in used by mount'
 			if [ -d "$CHROOT_DIR" ] ;then
 				cd "$CHROOT_DIR"
-				sudo mount "$LOOP_DEV"1 /mnt
+				sudo mount "$LOOP_DEV" /mnt
 				sudo bash -c "tar --exclude=qemu-arm-static -cf - . | tar -C /mnt -xvf -"
 				cd ..
 				sudo umount /mnt
@@ -182,7 +190,7 @@ copyrootfs2image()
 				exit $EXIT_ERROR
 			fi
 		else
-			echo $LOOP_DEV"1 does not seem to be a block device..."
+			echo $LOOP_DEV" does not seem to be a block device..."
 			sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
 			exit $EXIT_ERROR
 		fi
