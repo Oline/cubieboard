@@ -1,6 +1,3 @@
-[submodule "u-boot-sunxi"]
-	path = u-boot-sunxi
-	url = https://github.com/jwrdegoede/u-boot-sunxi.git
 [submodule "sunxi-tools"]
 	path = sunxi-tools
 	url = http://github.com/linux-sunxi/sunxi-tools.git
@@ -10,3 +7,6 @@
 [submodule "linux-stable"]
 	path = linux-stable
 	url = http://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+[submodule "u-boot"]
+	path = u-boot
+	url = http://git.denx.de/u-boot.git
