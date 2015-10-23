@@ -103,25 +103,19 @@ prepare_grsecurity:
 
 # Kernel compile
 
-kernel_defconfig:
+kernel_defconfig: $(LINUX_DIR)/.config
+
+$(LINUX_DIR)/.config:
 ifeq ($(findstring .config,$(wildcard $(LINUX_DIR)/.config)), ) # check if .config can be erased, else do not erase it
-ifeq ($(CUBIEBOARD_NAME), Cubieboard)
-	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sun4i_defconfig
-endif
-ifeq ($(CUBIEBOARD_NAME), Cubieboard2)
-	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sun7i_defconfig
-endif
-ifeq ($(CUBIEBOARD_NAME), Cubietruck)
-	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sun7i_defconfig
-endif
+	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) sunxi_defconfig
 else
 	@echo "File .config already exists."
 endif
 
-kernel_menuconfig:
+kernel_menuconfig: $(LINUX_DIR)/.config
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) menuconfig
 
-kernel_gconfig:
+kernel_gconfig: $(LINUX_DIR)/.config
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) gconfig
 
 kernel_compile: $(LINUX_DIR)/arch/arm/boot/uImage $(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dtb
@@ -131,7 +125,6 @@ $(LINUX_DIR)/arch/arm/boot/uImage: $(LINUX_DIR)/.config
 # and append this version to the kernel version in order to have this SHA1
 # matched in command : uname -a command and SNMP MIB
 	cd $(LINUX_DIR) && make \
-	EXTRAVERSION=-`git rev-parse --short HEAD` \
 	ARCH=arm \
 	CROSS_COMPILE=$(GCC_PREFIX) \
 	-j $(JOBS) \
@@ -139,7 +132,6 @@ $(LINUX_DIR)/arch/arm/boot/uImage: $(LINUX_DIR)/.config
 
 $(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dtb: $(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts $(LINUX_DIR)/.config
 	cd $(LINUX_DIR) && make \
-	EXTRAVERSION=-`git rev-parse --short HEAD` \
 	ARCH=arm \
 	CROSS_COMPILE=$(GCC_PREFIX) \
 	-j $(JOBS) \
