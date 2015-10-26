@@ -123,9 +123,6 @@ kernel_gconfig: $(LINUX_DIR)/.config
 kernel_compile: $(LINUX_DIR)/arch/arm/boot/uImage $(LINUX_DIR)/arch/arm/boot/dts/$(DTB)
 
 $(LINUX_DIR)/arch/arm/boot/uImage: $(LINUX_DIR)/.config
-# extract current SHA1 from git linux kernel version source
-# and append this version to the kernel version in order to have this SHA1
-# matched in command : uname -a command and SNMP MIB
 	cd $(LINUX_DIR) && make \
 	ARCH=arm \
 	CROSS_COMPILE=$(GCC_PREFIX) \
