@@ -35,10 +35,10 @@ help:
 	@echo "initsm:			git submodule init"
 	@echo "updatesm:		git submodule update"
 	@echo ""
-	@echo "  -- grsecurity patch management --"
-	@echo "patch_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX)"
-	@echo "prepare_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX)"
-	@echo ""
+	# @echo "  -- grsecurity patch management --"
+	# @echo "patch_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX)"
+	# @echo "prepare_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX)"
+	# @echo ""
 	@echo "  -- kernel configuration --"
 	@echo "kernel_menuconfig:	make menuconfig in LINUX_DIR"
 	@echo "kernel_gconfig:		make gconfig in LINUX_DIR"
@@ -75,8 +75,10 @@ help:
 	@echo "	HOSTNAME		=	$(HOSTNAME)"
 	@echo "	PACKAGES		=	$(PACKAGES)"
 	@echo "	CUBIEBOARD_NAME		=	$(CUBIEBOARD_NAME)"
-	@echo "	FORMAT_SDCARD		=	$(FORMAT_SDCARD)"
-	@echo "	SDCARD_DEVICE		=	$(SDCARD_DEVICE)"
+	@echo "	DTB			=	$(DTB)"
+	@echo "	DEB_ARCH		=	$(DEB_ARCH)"
+	@echo "	DEB_SUITE		=	$(DEB_SUITE)"
+	@echo "	HTTP_PROXY		=	$(HTTP_PROXY)"
 	@echo ""
 	@echo "	You can and MUST configure these variables from the file : makefile.vars"
 	@echo ""
@@ -94,12 +96,12 @@ updatesm:
 
 # grsecurity patch management
 
-patch_grsecurity:
-	cd $(LINUX_DIR) && git checkout -b 3.2.42
-	cd $(LINUX_DIR) && patch -p1 < ../grsecurity/grsecurity-2.9.1-3.2.42-201304061343.patch
+# patch_grsecurity:
+# 	cd $(LINUX_DIR) && git checkout -b 3.2.42
+# 	cd $(LINUX_DIR) && patch -p1 < ../grsecurity/grsecurity-2.9.1-3.2.42-201304061343.patch
 
-prepare_grsecurity:
-	cp conf/config_cubieboard_3.2.42_grsec linux-stable/.config
+# prepare_grsecurity:
+# 	cp conf/config_cubieboard_3.2.42_grsec linux-stable/.config
 
 # Kernel compile
 
