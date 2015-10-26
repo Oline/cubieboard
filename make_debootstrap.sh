@@ -114,6 +114,11 @@ update_system_and_custom_packages()
     sudo bash -c "echo deb http://http.debian.net/debian/ $DEB_SUITE main contrib non-free > etc/apt/sources.list"
     sudo bash -c "echo deb http://security.debian.org/ $DEB_SUITE/updates main contrib non-free >> etc/apt/sources.list"
     sudo mkdir -p etc/apt/apt.conf.d
+
+    # Configure http proxy for APT
+    sudo bash -c "echo "Acquire::http::Proxy \"$HTTP_PROXY\";" > etc/apt/apt.conf.d/99proxy"
+
+    # Update to be able to install lastest packages
     sudo chroot . apt-get update
 
     # Install brcmfmac firmware for Cubietruck (wifi/BT)
@@ -135,6 +140,7 @@ update_system_and_custom_packages()
     sudo chroot . apt-get clean
     sudo chroot . apt-get autoclean
     sudo rm etc/resolv.conf
+    sudo rm etc/apt/apt.conf.d/99proxy
 
     set +x
 }
