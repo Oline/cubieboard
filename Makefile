@@ -63,8 +63,8 @@ help:
 	@echo "  -- cleaning targets --"
 	@echo "kernel_clean:		"
 	@echo "kernel_distclean:	"
-	@echo "clean:			clean the compiled files (not done yet)"
-	@echo "distclean:		clean the compilet files and the root_fs"
+	@echo "clean:			clean the compiled files"
+	@echo "distclean:		clean the compiled files and the chroot directory"
 	@echo ""
 	@echo "  -- Environnement variables --"
 	@echo "	LINUX_DIR		=	$(LINUX_DIR)"
@@ -120,7 +120,7 @@ kernel_menuconfig: $(LINUX_DIR)/.config
 kernel_gconfig: $(LINUX_DIR)/.config
 	cd $(LINUX_DIR) && make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) gconfig
 
-kernel_compile: $(LINUX_DIR)/arch/arm/boot/uImage $(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dtb
+kernel_compile: $(LINUX_DIR)/arch/arm/boot/uImage $(LINUX_DIR)/arch/arm/boot/dts/$(DTB)
 
 $(LINUX_DIR)/arch/arm/boot/uImage: $(LINUX_DIR)/.config
 # extract current SHA1 from git linux kernel version source
@@ -132,7 +132,7 @@ $(LINUX_DIR)/arch/arm/boot/uImage: $(LINUX_DIR)/.config
 	-j $(JOBS) \
 	uImage modules LOADADDR=0x40008000
 
-$(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dtb: $(LINUX_DIR)/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts $(LINUX_DIR)/.config
+$(LINUX_DIR)/arch/arm/boot/dts/$(DTB): $(LINUX_DIR)/arch/arm/boot/dts/$(DTB) $(LINUX_DIR)/.config
 	cd $(LINUX_DIR) && make \
 	ARCH=arm \
 	CROSS_COMPILE=$(GCC_PREFIX) \
