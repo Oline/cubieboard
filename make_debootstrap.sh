@@ -37,7 +37,7 @@ do_debootstrap()
 {
     set -x
 
-    sudo http_proxy="$http_proxy" /usr/sbin/debootstrap --foreign --arch "$DEB_ARCH" "$DEB_SUITE" . "$DEBOOTSTRAP_MIRROR"
+    sudo http_proxy="$HTTP_PROXY" /usr/sbin/debootstrap --foreign --arch "$DEB_ARCH" "$DEB_SUITE" . "$DEBOOTSTRAP_MIRROR"
 # --variant=minbase
 
 
