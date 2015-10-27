@@ -37,7 +37,7 @@ do_debootstrap()
 {
     set -x
 
-    sudo /usr/sbin/debootstrap --foreign --arch "$DEB_ARCH" "$DEB_SUITE" . "$DEBOOTSTRAP_MIRROR"
+    sudo http_proxy="$http_proxy" /usr/sbin/debootstrap --foreign --arch "$DEB_ARCH" "$DEB_SUITE" . "$DEBOOTSTRAP_MIRROR"
 # --variant=minbase
 
 
@@ -118,7 +118,7 @@ update_system_and_custom_packages()
     # Configure http proxy for APT
     if [ -n "$HTTP_PROXY" ]
     then
-        sudo bash -c "echo \"Acquire::http::Proxy \"$HTTP_PROXY\";\" > etc/apt/apt.conf.d/99proxy"
+        sudo bash -c "echo -e \"Acquire::http::Proxy \\\"$HTTP_PROXY\\\";\" > etc/apt/apt.conf.d/99proxy"
     fi
 
     # Update to be able to install lastest packages
