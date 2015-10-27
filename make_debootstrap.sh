@@ -116,7 +116,10 @@ update_system_and_custom_packages()
     sudo mkdir -p etc/apt/apt.conf.d
 
     # Configure http proxy for APT
-    sudo bash -c "echo "Acquire::http::Proxy \"$HTTP_PROXY\";" > etc/apt/apt.conf.d/99proxy"
+    if [ -n "$HTTP_PROXY" ]
+    then
+        sudo bash -c "echo \"Acquire::http::Proxy \"$HTTP_PROXY\";\" > etc/apt/apt.conf.d/99proxy"
+    fi
 
     # Update to be able to install lastest packages
     sudo chroot . apt-get update
@@ -140,7 +143,11 @@ update_system_and_custom_packages()
     sudo chroot . apt-get clean
     sudo chroot . apt-get autoclean
     sudo rm etc/resolv.conf
-    sudo rm etc/apt/apt.conf.d/99proxy
+
+    if [ -e etc/apt/apt.conf.d/99proxy ]
+    then
+        sudo rm etc/apt/apt.conf.d/99proxy
+    fi
 
     set +x
 }
