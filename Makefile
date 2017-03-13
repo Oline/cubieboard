@@ -50,7 +50,7 @@ help:
 	@echo "with_lesser_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) DISABLE_PAX_PLUGINS=y uImage modules"
 	@echo ""
 	@echo "  -- u-boot compilation --"
-	@echo "u-boot:			make CROSS_COMPILE=$(GCC_PREFIX) $(CUBIEBOARD_NAME)_config"
+	@echo "u-boot:			make CROSS_COMPILE=$(GCC_PREFIX) $(BOARD_NAME)_config"
 	@echo ""
 	@echo "  -- root_fs & sdcard partitionning --"
 	@echo "debootstrap:		create the root_fs (need testing)"
@@ -74,7 +74,7 @@ help:
 	@echo "	JOBS			=	$(JOBS)"
 	@echo "	HOSTNAME		=	$(HOSTNAME)"
 	@echo "	PACKAGES		=	$(PACKAGES)"
-	@echo "	CUBIEBOARD_NAME		=	$(CUBIEBOARD_NAME)"
+	@echo "	BOARD_NAME		=	$(BOARD_NAME)"
 	@echo "	DTB			=	$(DTB)"
 	@echo "	DEB_ARCH		=	$(DEB_ARCH)"
 	@echo "	DEB_SUITE		=	$(DEB_SUITE)"
@@ -84,7 +84,7 @@ help:
 	@echo ""
 
 all:  u-boot kernel_defconfig kernel_compile debootstrap prepare_sdcard
-	@echo "Done. You can now use your $(CUBIEBOARD_NAME) :)"
+	@echo "Done. You can now use your $(BOARD_NAME) :)"
 
 # repositories update
 
@@ -154,7 +154,7 @@ kernel_distclean:
 u-boot: $(UBOOT_DIR)/u-boot-sunxi-with-spl.bin
 
 $(UBOOT_DIR)/u-boot-sunxi-with-spl.bin:
-	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) $(CUBIEBOARD_NAME)_config
+	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) $(BOARD_NAME)_config
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS)
 
 u-boot_clean:
