@@ -42,7 +42,13 @@ do_debootstrap()
 
 
 # that command is usefull to run target host binaries (ARM) on the build host  (x86)
-    sudo cp /usr/bin/qemu-arm-static usr/bin
+    if [ -x /usr/bin/qemu-arm-static ]; then
+        # For Debian
+        sudo cp /usr/bin/qemu-arm-static usr/bin
+    else
+        # For OpenSuse
+        sudo cp /usr/bin/qemu-arm* usr/bin
+    fi
 
 # if you use grsecurity on build host, you should uncomment that line
 #sudo /sbin/paxctl -cm usr/bin/qemu-arm-static
