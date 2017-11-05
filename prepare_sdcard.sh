@@ -102,21 +102,22 @@ build_image()
 # add map loop0221572 (253:74): 0 192512 linear /dev/loop0 196608
 # add map loop0221573 (253:75): 0 96256 linear /dev/loop0 389120
 
-    MY_LOOP_DEV=`echo $RES |awk '{print $8}'`
+    RES=`sudo /sbin/kpartx -l "$IMG_NAME"`
+    MY_LOOP_DEV=`echo $RES |awk '{print $5}'`
     MY_LOOP_DEV=`basename $MY_LOOP_DEV`
 
 # add current process id to loopdev
     LOOP_DEV=/dev/mapper/"$MY_LOOP_DEV""$TMP_VAL"
 
-    if [ -b "$LOOP_DEV"1 ] ; then
-        sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"1
-    fi
-    if [ -b "$LOOP_DEV"2 ]; then
-        sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"2
-    fi
-    if [ -b "$LOOP_DEV"3 ]; then
-        sudo /sbin/mkfs."$FS_TYPE" "$LOOP_DEV"3
-    fi
+    for i in `seq 1 3`
+    do
+        # Get the real loop device name instead of link
+        # from /dev/mapper/loopXXX that is NOT a block device
+        REAL_LOOP_DEV=`readlink -f "$LOOP_DEV""$i"`
+        if [ -b "$REAL_LOOP_DEV" ] ; then
+            sudo /sbin/mkfs."$FS_TYPE" "$REAL_LOOP_DEV"
+        fi
+    done
 
 # free internal loop device ...
     sudo /sbin/kpartx -d -p "$TMP_VAL" "$IMG_NAME"
