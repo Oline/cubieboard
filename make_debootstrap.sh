@@ -35,6 +35,12 @@ set -e
 
 do_debootstrap()
 {
+    # We check if the debootstrap has already be done
+    if [ -f ".debootstrap_done" ]; then
+        echo "Debootstrap already done, continuing..."
+        return
+    fi
+
     set -x
 
     sudo http_proxy="$HTTP_PROXY" /usr/sbin/debootstrap --foreign --arch "$DEB_ARCH" "$DEB_SUITE" . "$DEBOOTSTRAP_MIRROR"
@@ -58,6 +64,8 @@ do_debootstrap()
     sudo LC_ALL=C LANGUAGE=C LANG=C chroot . /debootstrap/debootstrap --second-stage
     sudo LC_ALL=C LANGUAGE=C LANG=C chroot . dpkg --configure -a
 
+# Set a file as a flag to say that the debootstrap as already be done completely
+    touch .debootstrap_done
     set +x
 }
 
@@ -111,6 +119,12 @@ configure_system()
 
 update_system_and_custom_packages()
 {
+    # We check if the debootstrap has already be done
+    if [ -f ".update_packages_done" ]; then
+        echo "Update and custom packages install already done, continuing..."
+        return
+    fi
+
     set -x
 
 # tmp stuff
@@ -155,6 +169,7 @@ update_system_and_custom_packages()
         sudo rm etc/apt/apt.conf.d/99proxy
     fi
 
+    touch ".update_packages_done"
     set +x
 }
 
@@ -227,29 +242,29 @@ cd $CHROOT_DIR
 
 case "$1" in
     all)
-	do_debootstrap
-	configure_system
-	update_system_and_custom_packages
-	install_kernel
-	board_script
-	;;
+	    do_debootstrap
+	    configure_system
+	    update_system_and_custom_packages
+	    install_kernel
+	    board_script
+	    ;;
     debootstrap)
-	do_debootstrap
-	;;
+	    do_debootstrap
+        ;;
     config)
-	configure_system
-	;;
+	    configure_system
+	    ;;
     custom)
-	update_system_and_custom_packages
-	;;
+	    update_system_and_custom_packages
+	    ;;
     kernel)
-	install_kernel
-	;;
+	    install_kernel
+	    ;;
     board_script)
-	board_script
-	;;
+	    board_script
+	    ;;
     *)
-	echo "Usage: make_debootstrap.sh {all|debootstrap|config|custom|kernel|board_script}"
+	    echo "Usage: make_debootstrap.sh {all|debootstrap|config|custom|kernel|board_script}"
 	exit 1
 esac
 
