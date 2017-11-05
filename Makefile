@@ -129,7 +129,7 @@ $(LINUX_DIR)/arch/arm/boot/uImage: $(LINUX_DIR)/.config
 	-j $(JOBS) \
 	uImage modules LOADADDR=0x40008000
 
-$(LINUX_DIR)/arch/arm/boot/dts/$(DTB): $(LINUX_DIR)/arch/arm/boot/dts/$(DTB) $(LINUX_DIR)/.config
+$(LINUX_DIR)/arch/arm/boot/dts/$(DTB): $(LINUX_DIR)/.config
 	cd $(LINUX_DIR) && make \
 	ARCH=arm \
 	CROSS_COMPILE=$(GCC_PREFIX) \
