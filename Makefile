@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2014, Sylvain Leroy <sylvain@unmondelibre.fr>
+# Copyright (c) 2013-2017, Sylvain Leroy <sylvain@unmondelibre.fr>
 #                    2014, Jean-Marc Lacroix <jeanmarc.lacroix@free.fr>
 
 # This file is part of CBoard.
@@ -24,7 +24,8 @@ include makefile.vars
 
 .PHONY: help all initsm updatesm patch_grsecurity prepare_grsecurity kernel_menuconfig
 .PHONY: kernel_gconfig kernel_defconfig kernel_compile with_grsecurity with_lesser_grsecurity
-.PHONY: u-boot debootstrap prepare_sdcard check kernel_clean kernel_distclean clean distclean
+.PHONY: u-boot u-boot_defconfig u-boot_compile debootstrap prepare_sdcard check kernel_clean
+.PHONY:	kernel_distclean clean distclean
 
 help:
 	@echo "What you can do:"
@@ -50,7 +51,8 @@ help:
 	@echo "with_lesser_grsecurity:	make ARCH=arm CROSS_COMPILE=$(GCC_PREFIX) DISABLE_PAX_PLUGINS=y uImage modules"
 	@echo ""
 	@echo "  -- u-boot compilation --"
-	@echo "u-boot:			make CROSS_COMPILE=$(GCC_PREFIX) $(BOARD_NAME)_config"
+	@echo "u-boot_defconfig:	make CROSS_COMPILE=$(GCC_PREFIX) $(BOARD_NAME)_config"
+	@echo "u-boot_compile:		make CROSS_COMPILE=$(GCC_PREFIX)"
 	@echo ""
 	@echo "  -- root_fs & sdcard partitionning --"
 	@echo "debootstrap:		create the root_fs (need testing)"
@@ -152,9 +154,13 @@ kernel_distclean:
 # bootloader u-boot compile
 
 u-boot: $(UBOOT_DIR)/u-boot-sunxi-with-spl.bin
+u-boot_defconfig: $(UBOOT_DIR)/.config
+u-boot_compile: $(UBOOT_DIR)/u-boot-sunxi-with-spl.bin
 
-$(UBOOT_DIR)/u-boot-sunxi-with-spl.bin:
+$(UBOOT_DIR)/.config:
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS) $(BOARD_NAME)_config
+
+$(UBOOT_DIR)/u-boot-sunxi-with-spl.bin: $(UBOOT_DIR)/.config
 	cd $(UBOOT_DIR) && make CROSS_COMPILE=$(GCC_PREFIX) -j $(JOBS)
 
 u-boot_clean:
