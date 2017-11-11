@@ -23,7 +23,7 @@ function check_command
 echo "Checking binary availability:"
 
 echo "--- Builder ---"
-check_command "make dd kpartx debootstrap chroot bash kill parted mkfs mount sudo gz bz2 xz md5sum sha1sum sha256sum"
+check_command "make dd kpartx debootstrap chroot bash kill parted mkfs mount sudo gzip bzip2 xz md5sum sha1sum sha256sum"
 
 echo "--- U-Boot & Linux ---"
 check_command "mkimage bc dtc"
