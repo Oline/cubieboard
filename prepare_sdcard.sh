@@ -1,6 +1,6 @@
 #! /usr/bin/env sh
 
-# Copyright (c) 2013-2014, Sylvain Leroy <sylvain@unmondelibre.fr>
+# Copyright (c) 2013-2017, Sylvain Leroy <sylvain@unmondelibre.fr>
 #                    2014, Jean-Marc Lacroix <jeanmarc.lacroix@free.fr>
 #                    2014, Philippe Thierry <phil@reseau-libre.net>
 
@@ -213,17 +213,14 @@ compress_image()
         "gz")
             echo "Compressing image using gzip"
             gzip "$IMG_NAME"
-            md5sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".md5
             ;;
         "bz")
             echo "Compressing image using bzip2"
             bzip2 -v "$IMG_NAME"
-            md5sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".md5
             ;;
         "xz")
             echo "Compressing image using xz"
             xz -zv "$IMG_NAME"
-            md5sum "$IMG_NAME"."$COMPRESS_IMG" >> "$IMG_NAME"."$COMPRESS_IMG".md5
             ;;
         "none")
             echo "Not compressing the image"
