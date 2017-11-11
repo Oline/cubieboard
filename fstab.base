@@ -3,6 +3,6 @@
 # Author of this file : Sylvain Leroy <sylvain@unmondelibre.fr>
 #
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
-/dev/root      /               ext2    noatime,errors=remount-ro 0 1
-tmpfs          /tmp            tmpfs   defaults,nosuid,nodev,noexec          0       0
+/dev/root      /               ext2    noatime,nodiratime,errors=remount-ro 0 1
+tmpfs          /tmp            tmpfs   defaults,nosuid,nodev          0       0
 proc           /proc           proc    defaults        0       0
